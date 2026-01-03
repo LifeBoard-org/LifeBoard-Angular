@@ -1,0 +1,82 @@
+<div class="relative flex min-h-screen w-full flex-col justify-center items-center p-4 sm:p-6 overflow-hidden">
+    <!-- Decorative Background Elements (Abstract/Calm) -->
+    <div
+        class="absolute top-[-20%] right-[-10%] w-[600px] h-[600px] bg-primary/10 rounded-full blur-3xl pointer-events-none mix-blend-multiply dark:mix-blend-screen opacity-50">
+    </div>
+    <div
+        class="absolute bottom-[-20%] left-[-10%] w-[500px] h-[500px] bg-blue-100/40 dark:bg-blue-900/10 rounded-full blur-3xl pointer-events-none mix-blend-multiply dark:mix-blend-screen opacity-50">
+    </div>
+    <!-- Login Card -->
+    <main
+        class="relative w-full max-w-[440px] bg-surface-light dark:bg-surface-dark rounded-[2.5rem] shadow-soft border border-white/50 dark:border-white/5 backdrop-blur-sm p-8 sm:p-10 flex flex-col gap-8 z-10 transition-colors duration-300">
+        <!-- Header Section -->
+        <div class="flex flex-col items-center text-center gap-2">
+            <!-- Logo Mark -->
+            <div class="h-12 w-12 rounded-2xl bg-primary/20 flex items-center justify-center text-primary mb-2">
+                <span aria-hidden="true" class="material-symbols-outlined text-[28px]">dashboard_customize</span>
+            </div>
+            <h1 class="text-3xl font-bold tracking-tight text-slate-900 dark:text-white">Welcome back</h1>
+            <p class="text-slate-500 dark:text-slate-400 font-medium">Continue where you left off.</p>
+        </div>
+        <!-- Form Section -->
+        <form action="#" class="flex flex-col gap-5" method="POST" onsubmit="event.preventDefault();">
+            <!-- Email Field -->
+            <div class="group">
+                <label class="block text-sm font-semibold text-slate-700 dark:text-slate-200 ml-4 mb-2"
+                    for="email">Email Address</label>
+                <div class="relative">
+                    <input
+                        class="form-input w-full bg-slate-50 dark:bg-black/20 border border-slate-200 dark:border-slate-700 rounded-full py-3.5 px-6 text-slate-900 dark:text-white placeholder:text-slate-400 focus:border-primary focus:ring-4 focus:ring-primary/20 outline-none"
+                        id="email" name="email" placeholder="you@lifeboard.app" required="" type="email" />
+                    <span
+                        class="material-symbols-outlined absolute right-5 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none text-[20px]">mail</span>
+                </div>
+            </div>
+            <!-- Password Field -->
+            <div class="group">
+                <label class="block text-sm font-semibold text-slate-700 dark:text-slate-200 ml-4 mb-2"
+                    for="password">Password</label>
+                <div class="relative">
+                    <input
+                        class="form-input w-full bg-slate-50 dark:bg-black/20 border border-slate-200 dark:border-slate-700 rounded-full py-3.5 px-6 text-slate-900 dark:text-white placeholder:text-slate-400 focus:border-primary focus:ring-4 focus:ring-primary/20 outline-none pr-12"
+                        id="password" name="password" placeholder="Enter your password" required="" type="password" />
+                    <button aria-label="Toggle password visibility"
+                        class="absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 dark:hover:text-slate-300 p-1 rounded-full hover:bg-slate-100 dark:hover:bg-white/5 transition-colors flex items-center justify-center"
+                        type="button">
+                        <span class="material-symbols-outlined text-[20px]" data-icon="visibility">visibility</span>
+                    </button>
+                </div>
+                <!-- Forgot Password Link -->
+                <div class="flex justify-end mt-2 mr-2">
+                    <a class="text-sm font-medium text-slate-500 dark:text-slate-400 hover:text-primary dark:hover:text-primary transition-colors"
+                        href="#">Forgot password?</a>
+                </div>
+            </div>
+            <!-- Primary Action -->
+            <button
+                class="mt-2 w-full bg-primary hover:bg-[#22bd5d] active:scale-[0.98] text-[#052e16] text-base font-bold py-4 rounded-full shadow-glow transition-all duration-200 flex items-center justify-center gap-2"
+                routerLink="/dashboard"
+                type="submit">
+                <span>Log In</span>
+                <span class="material-symbols-outlined text-[20px] font-bold">arrow_forward</span>
+            </button>
+        </form>
+        <!-- Divider -->
+        <div class="relative flex items-center py-2">
+            <div class="flex-grow border-t border-slate-200 dark:border-slate-700"></div>
+            <span class="flex-shrink-0 mx-4 text-slate-400 text-sm font-medium">New to LifeBoard?</span>
+            <div class="flex-grow border-t border-slate-200 dark:border-slate-700"></div>
+        </div>
+        <!-- Secondary Action -->
+        <button
+            class="w-full bg-transparent hover:bg-slate-50 dark:hover:bg-white/5 border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-200 font-semibold py-3.5 rounded-full transition-all duration-200 active:scale-[0.98]"
+            routerLink="/auth/signup"
+            type="button">
+            Create an account
+        </button>
+    </main>
+    <!-- Footer / Copyright -->
+    <footer class="mt-8 text-center text-slate-400 text-xs font-medium">
+        <p>© 2024 LifeBoard Inc. Mindful Productivity.</p>
+    </footer>
+</div>

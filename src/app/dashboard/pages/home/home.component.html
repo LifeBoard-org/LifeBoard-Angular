@@ -1,0 +1,150 @@
+<div class="max-w-7xl mx-auto w-full p-4 md:p-8 lg:p-10 flex flex-col gap-8 md:gap-12">
+
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+
+        <div
+            class="lg:col-span-8 flex flex-col justify-between rounded-[2rem] bg-surface-light dark:bg-surface-dark p-6 md:p-8 relative overflow-hidden group">
+
+            <div
+                class="absolute top-0 right-0 w-64 h-64 bg-primary/5 rounded-full blur-3xl -mr-16 -mt-16 pointer-events-none">
+            </div>
+            <div class="relative z-10 flex flex-col h-full justify-between gap-8">
+                <div>
+                    <h1 class="text-3xl md:text-5xl font-bold text-text-primary mb-2 tracking-tight">Good Morning, {{
+                        userName() }}</h1>
+                    <p class="text-text-secondary text-lg flex items-center gap-2">
+                        <span class="material-symbols-outlined text-xl">calendar_today</span>
+                        {{ currentDate() | date:'EEEE, MMM d, y' }}
+                    </p>
+                </div>
+                <div class="flex flex-col sm:flex-row items-start sm:items-end justify-between gap-4">
+                    <div
+                        class="flex items-center gap-3 bg-surface-variant pr-4 pl-1.5 py-1.5 rounded-full backdrop-blur-sm border border-white/5">
+                        <div class="size-8 rounded-full bg-primary/20 flex items-center justify-center text-primary">
+                            <span class="material-symbols-outlined text-lg">bolt</span>
+                        </div>
+                        <span class="text-sm font-medium text-text-secondary">Focus: {{ focus() }}</span>
+                    </div>
+                    <button
+                        class="flex items-center gap-2 bg-primary hover:bg-primary/90 text-background-dark px-6 py-3 rounded-full font-bold text-sm transition-transform active:scale-95 shadow-[0_0_20px_rgba(54,226,123,0.2)]">
+                        <span>Open Today's Board</span>
+                        <span class="material-symbols-outlined text-lg">arrow_forward</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <div class="lg:col-span-4 flex flex-col gap-4 ">
+            @for (stat of quickStats(); track stat.label) {
+            <div class="flex-1 bg-surface-light dark:bg-surface-dark rounded-[2rem] p-6 flex items-center justify-between">
+                <div>
+                    <p class="text-text-secondary text-sm font-medium mb-1">{{ stat.label }}</p>
+                    <div class="flex items-baseline gap-2">
+                        <span class="text-3xl font-bold text-text-secondary">{{ stat.value }}</span>
+                        @if (stat.change) {
+                        <span class="text-sm font-medium rounded-full px-2 py-0.5" [class]="stat.changeColor || ''">{{
+                            stat.change }}</span>
+                        }
+                    </div>
+                </div>
+                <div class="size-12 rounded-full flex items-center justify-center" [class]="stat.color">
+                    <span class="material-symbols-outlined" [class.filled]="stat.icon === 'local_fire_department'"
+                        [style.font-variation-settings]="stat.icon === 'local_fire_department' ? '\'FILL\' 1' : null">
+                        {{ stat.icon }}
+                    </span>
+                </div>
+            </div>
+            }
+        </div>
+    </div>
+
+    <section>
+        <div class="flex items-center justify-between mb-4 px-2">
+            <h2 class="text-xl font-bold text-text-secondary tracking-tight">The Week Ahead</h2>
+            <button
+                class="text-text-secondary hover:text-white text-sm font-medium flex items-center gap-1 transition-colors">
+                View Calendar <span class="material-symbols-outlined text-sm">chevron_right</span>
+            </button>
+        </div>
+        <div class="overflow-x-auto hide-scrollbar pb-4 -mx-4 px-4 md:mx-0 md:px-0">
+            <div class="flex gap-4 min-w-max">
+                @for (day of upcomingDays(); track day.date) {
+                <div
+                    class="flex flex-col items-center justify-center w-24 h-32 rounded-[1.5rem] bg-surface-light dark:bg-surface-dark border border-white/5 hover:border-primary/50 transition-all cursor-pointer group">
+                    <span class="text-text-secondary text-xs font-medium uppercase mb-1">{{ day.day }}</span>
+                    <span class="text-xl font-bold text-text-secondary mb-2">{{ day.date }}</span>
+                    <div class="flex gap-1" [class.opacity-20]="day.tasks.length === 0">
+                        @if (day.tasks.length > 0) {
+                        @for (task of day.tasks; track $index) {
+                        <div class="size-1.5 rounded-full" [class]="task.color"></div>
+                        }
+                        } @else {
+                        <div class="size-1.5 rounded-full bg-white"></div>
+                        }
+                    </div>
+                </div>
+                }
+            </div>
+        </div>
+    </section>
+
+    <section class="flex flex-col gap-4">
+        <div class="flex flex-wrap items-end justify-between gap-4 px-2">
+            <div>
+                <h2 class="text-xl font-bold text-text-secondary tracking-tight">Your Life Map</h2>
+                <p class="text-text-secondary text-sm">Visualizing your momentum over the last 12 months.</p>
+            </div>
+            <div class="flex items-center gap-2 text-xs text-text-secondary bg-surface-light dark:bg-surface-dark px-3 py-1.5 rounded-full">
+                <span>Less</span>
+                <div class="size-3 rounded-full bg-white/5 border border-white/5"></div>
+                <div class="size-3 rounded-full bg-primary/30"></div>
+                <div class="size-3 rounded-full bg-primary/60"></div>
+                <div class="size-3 rounded-full bg-primary"></div>
+                <span>More</span>
+            </div>
+        </div>
+        <div class="bg-surface-light dark:bg-surface-dark rounded-[2rem] p-6 md:p-8 overflow-x-auto border border-white/5 shadow-inner">
+            <div class="min-w-[800px] flex gap-2">
+                <div class="flex flex-col gap-1.5 mr-2 pt-8">
+                    <span class="h-3 text-[10px] text-text-secondary leading-none">Mon</span>
+                    <span class="h-3 text-[10px] text-transparent leading-none">Tue</span>
+                    <span class="h-3 text-[10px] text-text-secondary leading-none">Wed</span>
+                    <span class="h-3 text-[10px] text-transparent leading-none">Thu</span>
+                    <span class="h-3 text-[10px] text-text-secondary leading-none">Fri</span>
+                    <span class="h-3 text-[10px] text-transparent leading-none">Sat</span>
+                    <span class="h-3 text-[10px] text-text-secondary leading-none">Sun</span>
+                </div>
+                <div class="flex-1">
+                    <div class="flex justify-between text-[10px] text-text-secondary mb-2 px-1">
+                        @for (month of heatmapMonths(); track month) {
+                        <span>{{ month }}</span>
+                        }
+                    </div>
+                    <div class="grid grid-flow-col grid-rows-7 gap-1.5">
+                        @for (column of heatmapData(); track $index) {
+                        @for (cell of column; track $index) {
+                        <div class="size-3 rounded-full transition-all hover:scale-125 hover:brightness-125 cursor-pointer"
+                            [class.bg-white/5]="cell.level === 0 && !cell.isFuture && !cell.isDashed"
+                            [class.border]="cell.level === 0 && !cell.isFuture && !cell.isDashed"
+                            [class.border-white/5]="cell.level === 0 && !cell.isFuture && !cell.isDashed"
+                            [class.bg-primary]="cell.level > 0" [style.opacity]="cell.level > 0 ? cell.level / 4 : 1"
+                            [class.relative]="cell.isToday" [class.border-dashed]="cell.isDashed"
+                            [class.bg-transparent]="cell.isFuture" [class.border-white/10]="cell.isFuture"
+                            [class.hover:border-white/30]="cell.isFuture"
+                            [title]="cell.isFuture ? 'Future Date' : (cell.isToday ? 'Today' : 'Past Date')">
+                            @if (cell.isToday) {
+                            <div class="absolute inset-0 rounded-full bg-primary animate-ping opacity-75"></div>
+                            }
+                        </div>
+                        }
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <div class="flex justify-center pb-8 pt-4">
+        <p class="text-text-secondary text-sm">LifeBoard © 2023</p>
+    </div>
+</div>

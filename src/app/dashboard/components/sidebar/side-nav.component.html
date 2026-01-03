@@ -1,0 +1,54 @@
+<!-- side-nav.component.html -->
+<aside
+  class="hidden md:flex flex-col items-center justify-between min-h-screen w-24 py-8
+         border-r border-white/5 bg-surface-light dark:bg-surface-dark z-20"
+>
+  <!-- Logo -->
+  <div class="mb-10">
+    <div
+      class="size-12 rounded-full bg-gradient-to-br from-primary to-emerald-600
+             flex items-center justify-center
+             shadow-[0_0_15px_rgba(54,226,123,0.3)]"
+    >
+    <span (click)="toggle()" class="material-symbols-outlined text-[24px] cursor-pointer">dashboard_customize</span>
+    </div>
+  </div>
+
+  <!-- Navigation -->
+  <nav class="flex flex-col gap-6 w-full px-4">
+    @for( item of navItems;track item.label){
+        <button
+          type="button"
+          (click)="navigate(item.route)"
+          class="group flex flex-col items-center gap-1 p-2 rounded-xl
+                 transition-colors text-text-secondary
+                 hover:text-white hover:bg-white/5"
+          [class.bg-primary/10]="isActive(item.route)"
+          [class.text-primary]="isActive(item.route)"
+        >
+          <span
+            class="material-symbols-outlined"
+            [class.filled]="isActive(item.route)"
+            [style.fontVariationSettings]="
+              isActive(item.route) ? `'FILL' 1` : `'FILL' 0`
+            "
+          >
+            {{ item.icon }}
+          </span>
+    
+          <span class="text-[10px] font-medium">
+            {{ item.label }}
+          </span>
+        </button>
+    }
+  </nav>
+
+  <!-- User Avatar (placeholder for now) -->
+  <div class="mt-auto">
+    <div
+      class="size-10 rounded-full bg-cover bg-center
+             border-2 border-white/10"
+      style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuD78Q-R2_2ulPzfBVXcXQz186MmYApbTHfd-uEaQsixMhw-utYTKHVFLygaJMR2pHyYmYEGcvIXmrxDO838f5ShczaGPI4c-zU9JP6e812DOZaLqLTHw86jxd_s9BRwyTkznzU2EYoKYJCFhYBcy8kbE2b5yoTYksRoghoklPwKlf36W8fjFwJ4aB4EHFOwnaOjGLsUaSZaq9WmVG9GSdyMeWO-ExSuRhv0LGEIOjiaasxL3iobR8dMHGNNJSF0E0H7iKf0SA9Wg3g')"
+    ></div>
+  </div>
+</aside>

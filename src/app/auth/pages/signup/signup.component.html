@@ -1,0 +1,131 @@
+<div class="relative flex min-h-screen w-full flex-col justify-center items-center p-4 sm:p-6 overflow-hidden">
+  <!-- Decorative Background Elements (Abstract/Calm) -->
+  <div
+    class="absolute top-[-20%] right-[-10%] w-[600px] h-[600px] bg-primary/10 rounded-full blur-3xl pointer-events-none mix-blend-multiply dark:mix-blend-screen opacity-50">
+  </div>
+  <div
+    class="absolute bottom-[-20%] left-[-10%] w-[500px] h-[500px] bg-blue-100/40 dark:bg-blue-900/10 rounded-full blur-3xl pointer-events-none mix-blend-multiply dark:mix-blend-screen opacity-50">
+  </div>
+  <!-- Login Card -->
+  <main
+    class="relative w-full max-w-[440px] bg-surface-light dark:bg-surface-dark rounded-[2.5rem] shadow-soft border border-white/50 dark:border-white/5 backdrop-blur-sm p-8 sm:p-10 flex flex-col gap-8 z-10 transition-colors duration-300">
+    <!-- Header Section -->
+    <div class="flex flex-col items-center text-center gap-2">
+      <!-- Logo Mark -->
+      <div class="h-12 w-12 rounded-2xl bg-primary/20 flex items-center justify-center text-primary mb-2">
+        <span aria-hidden="true" class="material-symbols-outlined text-[28px]">dashboard_customize</span>
+      </div>
+      <h1 class="text-3xl font-bold tracking-tight text-slate-900 dark:text-white">Create your LifeBoard</h1>
+      <p class="text-slate-500 dark:text-slate-400 font-medium">Start tracking your days with clarity.</p>
+    </div>
+    <!-- Form Section -->
+    <form action="#" class="space-y-5" method="POST">
+      <!-- Full Name -->
+      <div class="input-group group">
+        <label class="block text-sm font-medium text-text-main dark:text-gray-300 mb-1.5 ml-1 transition-colors"
+          for="name">Full Name</label>
+        <div class="relative">
+          <div class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none">
+            <span
+              class="material-symbols-outlined text-gray-400 group-focus-within:text-primary-dark transition-colors text-[20px]">person</span>
+          </div>
+          <input
+            class="block w-full pl-10 pr-4 py-3 bg-background-light dark:bg-background-dark border-transparent focus:border-primary focus:ring-2 focus:ring-primary/20 rounded-lg text-text-main dark:text-white placeholder-gray-400 dark:placeholder-gray-600 font-medium transition-all outline-none"
+            id="name" name="name" placeholder="Jane Doe" required="" type="text" />
+        </div>
+      </div>
+      <!-- Email -->
+      <div class="input-group group">
+        <label class="block text-sm font-medium text-text-main dark:text-gray-300 mb-1.5 ml-1 transition-colors"
+          for="email">Email Address</label>
+        <div class="relative">
+          <div class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none">
+            <span
+              class="material-symbols-outlined text-gray-400 group-focus-within:text-primary-dark transition-colors text-[20px]">mail</span>
+          </div>
+          <input
+            class="block w-full pl-10 pr-4 py-3 bg-background-light dark:bg-background-dark border-transparent focus:border-primary focus:ring-2 focus:ring-primary/20 rounded-lg text-text-main dark:text-white placeholder-gray-400 dark:placeholder-gray-600 font-medium transition-all outline-none"
+            id="email" name="email" placeholder="jane@example.com" required="" type="email" />
+        </div>
+      </div>
+      <!-- Password -->
+      <div class="input-group group">
+        <label class="block text-sm font-medium text-text-main dark:text-gray-300 mb-1.5 ml-1 transition-colors"
+          for="password">Password</label>
+        <div class="relative">
+          <div class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none">
+            <span
+              class="material-symbols-outlined text-gray-400 group-focus-within:text-primary-dark transition-colors text-[20px]">lock</span>
+          </div>
+          <input
+            class="block w-full pl-10 pr-4 py-3 bg-background-light dark:bg-background-dark border-transparent focus:border-primary focus:ring-2 focus:ring-primary/20 rounded-lg text-text-main dark:text-white placeholder-gray-400 dark:placeholder-gray-600 font-medium transition-all outline-none"
+            id="password" name="password" placeholder="••••••••" required="" type="password" />
+        </div>
+      </div>
+      <!-- Confirm Password -->
+      <div class="input-group group">
+        <label class="block text-sm font-medium text-text-main dark:text-gray-300 mb-1.5 ml-1 transition-colors"
+          for="confirm-password">Confirm Password</label>
+        <div class="relative">
+          <div class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none">
+            <span
+              class="material-symbols-outlined text-gray-400 group-focus-within:text-primary-dark transition-colors text-[20px]">lock_reset</span>
+          </div>
+          <input
+            class="block w-full pl-10 pr-4 py-3 bg-background-light dark:bg-background-dark border-transparent focus:border-primary focus:ring-2 focus:ring-primary/20 rounded-lg text-text-main dark:text-white placeholder-gray-400 dark:placeholder-gray-600 font-medium transition-all outline-none"
+            id="confirm-password" name="confirm-password" placeholder="••••••••" required="" type="password" />
+        </div>
+      </div>
+      <!-- Terms Checkbox (Optional enhancement for clarity) -->
+      <div class="flex items-start pt-1">
+        <div class="flex h-6 items-center">
+          <input
+            class="h-4 w-4 rounded border-gray-300 text-primary focus:ring-primary dark:border-gray-600 dark:bg-gray-700"
+            id="terms" name="terms" type="checkbox" />
+        </div>
+        <div class="ml-3 text-sm leading-6">
+          <label class="font-normal text-text-muted dark:text-gray-400" for="terms">
+            I agree to the
+            <a class="font-semibold text-text-main dark:text-white hover:underline decoration-primary decoration-2 underline-offset-2"
+              href="#">Terms</a>
+            and
+            <a class="font-semibold text-text-main dark:text-white hover:underline decoration-primary decoration-2 underline-offset-2"
+              href="#">Privacy Policy</a>.
+          </label>
+        </div>
+      </div>
+      <!-- Submit Button -->
+      <div class="pt-2">
+        <button
+          class="group relative flex w-full justify-center rounded-full bg-primary py-3.5 px-4 text-sm font-bold text-text-main shadow-sm hover:bg-primary-dark focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 transition-all duration-200 transform active:scale-[0.98]"
+          type="submit">
+          Create Account
+          <span
+            class="absolute inset-y-0 right-0 flex items-center pr-3 opacity-0 group-hover:opacity-100 transition-opacity duration-200">
+            <span class="material-symbols-outlined text-sm">arrow_forward</span>
+          </span>
+        </button>
+      </div>
+    </form>
+    <div class="relative mt-8 mb-6">
+      <div aria-hidden="true" class="absolute inset-0 flex items-center">
+        <div class="w-full border-t border-gray-100 dark:border-gray-700"></div>
+      </div>
+      <div class="relative flex justify-center text-sm font-medium leading-6">
+        <span class="bg-surface-light dark:bg-surface-dark px-4 text-text-muted dark:text-gray-500">Already have an
+          account?</span>
+      </div>
+    </div>
+    <!-- Login Link -->
+    <div class="text-center">
+      <a class="inline-flex items-center justify-center w-full rounded-full border border-gray-200 dark:border-gray-700 bg-transparent px-4 py-3 text-sm font-bold text-text-main dark:text-white hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors"
+        routerLink="/auth/login">
+        Log In
+      </a>
+    </div>
+  </main>
+  <!-- Footer / Copyright -->
+  <footer class="mt-8 text-center text-slate-400 text-xs font-medium">
+    <p>© 2024 LifeBoard Inc. Mindful Productivity.</p>
+  </footer>
+</div>

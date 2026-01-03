@@ -1,1 +1,62 @@
-/* You can add global styles to this file, and also import other style files */
+@import "tailwindcss";
+
+/* Light Theme */
+:root {
+    --surface: 255 255 255;
+    --surface-variant: 245 247 250;
+  
+    --text-primary: 17 24 39;
+    --text-secondary: 75 85 99;
+  
+    --border: 229 231 235;
+  
+    --primary: 59 130 246;
+    --primary-hover: 37 99 235;
+  }
+  
+  /* Dark Theme */
+  .dark {
+    --surface: 17 24 39;
+    --surface-variant: 31 41 55;
+  
+    --text-primary: 243 244 246;
+    --text-secondary: 156 163 175;
+  
+    --border: 55 65 81;
+  
+    --primary: 96 165 250;
+    --primary-hover: 147 197 253;
+  }
+  
+  /* =========================
+     Semantic Utility Aliases
+     ========================= */
+  
+  @layer utilities {
+    .bg-surface {
+      background-color: rgb(var(--surface));
+    }
+    .bg-surface-variant {
+      background-color: rgb(var(--surface-variant));
+    }
+  
+    .text-primary {
+      color: rgb(var(--text-primary));
+    }
+    .text-secondary {
+      color: rgb(var(--text-secondary));
+    }
+  
+    .border-theme {
+      border-color: rgb(var(--border));
+    }
+  
+    .bg-primary {
+      background-color: rgb(var(--primary));
+    }
+    .bg-primary-hover:hover {
+      background-color: rgb(var(--primary-hover));
+    }
+  }
+
+  
