@@ -30,4 +30,7 @@ export class ThemeService {
   private loadTheme(): ThemeMode {
     return (localStorage.getItem(this.STORAGE_KEY) as ThemeMode) || 'light';
   }
+  isDarkMode(): boolean {
+    return this.theme() === 'dark';
+  }
 }

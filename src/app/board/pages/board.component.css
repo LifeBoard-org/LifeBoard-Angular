@@ -1,0 +1,36 @@
+/* board.component.scss */
+.viewport {
+    background-color: var(--surface);
+    width: 100vw;
+    height: 100vh;
+    overflow: hidden;
+    cursor: grab;
+    position: relative;
+    /* Prevent text selection while panning */
+    user-select: none;
+  }
+  
+  .canvas-surface {
+    position: absolute;
+    top: 0;
+    left: 0;
+    /* We use a large area, but translate moves the "zero point" */
+    width: 1px; 
+    height: 1px;
+    transform-origin: 0 0;
+    will-change: transform; /* Hint to the browser for GPU acceleration */
+  }
+  
+  .bg-dot-pattern {
+    background-image: radial-gradient(#254632 1px, transparent 1px);
+    background-size: 24px 24px;
+    position: absolute;
+    /* top: -1000px;
+    left: -1000px; */
+    /* width: 2000px; */
+    /* height: 2000px; */
+    width: 100%;
+    height: 100%;
+    /* z-index: -1; */
+    /* border:1px solid red; */
+  }

@@ -1,5 +1,6 @@
 import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
 import { CommonModule, DatePipe } from '@angular/common';
+import { LifeMapComponent } from '../../components/life-map/life-map.component';
 
 interface Stat {
   label: string;
@@ -25,7 +26,7 @@ interface HeatmapCell {
 
 @Component({
   selector: 'app-home',
-  imports: [CommonModule, DatePipe],
+  imports: [CommonModule, DatePipe,LifeMapComponent],
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.css'],
   changeDetection: ChangeDetectionStrategy.OnPush,

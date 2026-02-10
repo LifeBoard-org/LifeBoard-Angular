@@ -88,61 +88,7 @@
         </div>
     </section>
 
-    <section class="flex flex-col gap-4">
-        <div class="flex flex-wrap items-end justify-between gap-4 px-2">
-            <div>
-                <h2 class="text-xl font-bold text-text-secondary tracking-tight">Your Life Map</h2>
-                <p class="text-text-secondary text-sm">Visualizing your momentum over the last 12 months.</p>
-            </div>
-            <div class="flex items-center gap-2 text-xs text-text-secondary bg-surface-light dark:bg-surface-dark px-3 py-1.5 rounded-full">
-                <span>Less</span>
-                <div class="size-3 rounded-full bg-white/5 border border-white/5"></div>
-                <div class="size-3 rounded-full bg-primary/30"></div>
-                <div class="size-3 rounded-full bg-primary/60"></div>
-                <div class="size-3 rounded-full bg-primary"></div>
-                <span>More</span>
-            </div>
-        </div>
-        <div class="bg-surface-light dark:bg-surface-dark rounded-[2rem] p-6 md:p-8 overflow-x-auto border border-white/5 shadow-inner">
-            <div class="min-w-[800px] flex gap-2">
-                <div class="flex flex-col gap-1.5 mr-2 pt-8">
-                    <span class="h-3 text-[10px] text-text-secondary leading-none">Mon</span>
-                    <span class="h-3 text-[10px] text-transparent leading-none">Tue</span>
-                    <span class="h-3 text-[10px] text-text-secondary leading-none">Wed</span>
-                    <span class="h-3 text-[10px] text-transparent leading-none">Thu</span>
-                    <span class="h-3 text-[10px] text-text-secondary leading-none">Fri</span>
-                    <span class="h-3 text-[10px] text-transparent leading-none">Sat</span>
-                    <span class="h-3 text-[10px] text-text-secondary leading-none">Sun</span>
-                </div>
-                <div class="flex-1">
-                    <div class="flex justify-between text-[10px] text-text-secondary mb-2 px-1">
-                        @for (month of heatmapMonths(); track month) {
-                        <span>{{ month }}</span>
-                        }
-                    </div>
-                    <div class="grid grid-flow-col grid-rows-7 gap-1.5">
-                        @for (column of heatmapData(); track $index) {
-                        @for (cell of column; track $index) {
-                        <div class="size-3 rounded-full transition-all hover:scale-125 hover:brightness-125 cursor-pointer"
-                            [class.bg-white/5]="cell.level === 0 && !cell.isFuture && !cell.isDashed"
-                            [class.border]="cell.level === 0 && !cell.isFuture && !cell.isDashed"
-                            [class.border-white/5]="cell.level === 0 && !cell.isFuture && !cell.isDashed"
-                            [class.bg-primary]="cell.level > 0" [style.opacity]="cell.level > 0 ? cell.level / 4 : 1"
-                            [class.relative]="cell.isToday" [class.border-dashed]="cell.isDashed"
-                            [class.bg-transparent]="cell.isFuture" [class.border-white/10]="cell.isFuture"
-                            [class.hover:border-white/30]="cell.isFuture"
-                            [title]="cell.isFuture ? 'Future Date' : (cell.isToday ? 'Today' : 'Past Date')">
-                            @if (cell.isToday) {
-                            <div class="absolute inset-0 rounded-full bg-primary animate-ping opacity-75"></div>
-                            }
-                        </div>
-                        }
-                        }
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
+    <app-life-map></app-life-map>
 
     <div class="flex justify-center pb-8 pt-4">
         <p class="text-text-secondary text-sm">LifeBoard © 2023</p>

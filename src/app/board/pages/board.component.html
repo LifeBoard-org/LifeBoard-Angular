@@ -1,0 +1,167 @@
+<header class="fixed w-full z-50 px-6 py-4 flex justify-center items-start pointer-events-none">
+    <div
+        class="pointer-events-auto  backdrop-blur-md border border-[#254632] rounded-full px-4 py-2 flex items-center justify-between shadow-elevation-2 w-full max-w-[900px] gap-4 transition-all ">
+        <!-- Left: Back Action -->
+        <button routerLink="/dashboard" aria-label="Back to Heatmap"
+            class="flex items-center justify-center w-10 h-10 rounded-full hover:bg-[#254632] text-secondary transition-colors group">
+            <span class="material-symbols-outlined group-hover:-translate-x-0.5 transition-transform">arrow_back</span>
+        </button>
+        <!-- Center: Navigation & Date -->
+        <div class="flex items-center gap-2">
+            <button
+                class="flex items-center justify-center w-10 h-10 rounded-full hover:bg-[#254632] text-secondary/70 hover:text-secondary transition-colors">
+                <span class="material-symbols-outlined">chevron_left</span>
+            </button>
+            <button
+                class="flex items-center gap-2 px-4 h-10 rounded-full hover:bg-[#254632] text-secondary transition-colors group">
+                <span class="material-symbols-outlined text-primary text-[20px] filled">calendar_today</span>
+                <span class="text-base font-bold tracking-tight">Oct 24, 2023</span>
+                <span
+                    class="material-symbols-outlined text-[18px] text-secondary/50 group-hover:text-secondary transition-colors">arrow_drop_down</span>
+            </button>
+            <button
+                class="flex items-center justify-center w-10 h-10 rounded-full hover:bg-[#254632] text-secondary/70 hover:text-secondary transition-colors">
+                <span class="material-symbols-outlined">chevron_right</span>
+            </button>
+        </div>
+        <!-- Right: Actions -->
+        <div class="flex items-center gap-1">
+            <button
+                class="flex items-center justify-center w-10 h-10 rounded-full hover:bg-[#254632] text-secondary transition-colors"
+                title="More options">
+                <span class="material-symbols-outlined">more_vert</span>
+            </button>
+            <div class="w-[1px] h-6 bg-[#254632] mx-1"></div>
+            <span (click)="toggle()"
+                class="material-symbols-outlined text-[24px] cursor-pointer">{{darkMode?'dark_mode':'light_mode'}}</span>
+        </div>
+    </div>
+</header>
+<div class="viewport" >
+    <!-- (mousedown)="startPanning($event)" (wheel)="handleZoom($event)" -->
+    <div class="canvas-surface bg-dot-pattern " [style.transform]="surfaceTransform()">
+        <!-- <div  class="bg-dot-pattern"></div> -->
+
+        @for (item of boardItems(); track item.id) {
+        <div class=" absolute cursor-move hover:z-10  hover:scale-[1.01] " cdkDrag [style.left.px]="item.x"
+            [style.top.px]="item.y" (cdkDragEnded)="onDragEnd($event, item)">
+            @if(item.type==1){
+            <div class="bg-[#e2e8f0] dark:bg-[#2A4034] rounded-[2rem] p-6 shadow-elevation-3 border border-primary/10">
+                <div class="flex justify-between items-center mb-4 pl-1">
+                    <h3 class="text-secondary text-lg font-bold flex items-center gap-2">
+                        <span class="bg-primary/20 text-primary p-1.5 rounded-lg">
+                            <span class="material-symbols-outlined text-[20px]">check_box</span>
+                        </span>
+                        Work Tasks
+                    </h3>
+                    <button class="text-gray-500 hover:text-secondary transition-colors rounded-full p-1 hover:bg-white/5">
+                        <span class="material-symbols-outlined text-[20px]">more_horiz</span>
+                    </button>
+                </div>
+                <div class="space-y-1">
+                    <!-- Checked Item -->
+                    <label
+                        class="flex gap-x-3 py-2 px-3 flex-row items-center hover:bg-white/5 rounded-xl transition-colors cursor-pointer group">
+                        <div class="relative flex items-center">
+                            <input checked=""
+                                class="peer h-5 w-5 rounded border-[#366348] border-2 bg-transparent text-[#36e27b] checked:bg-[#36e27b] checked:border-[#36e27b] focus:ring-0 focus:ring-offset-0 focus:border-[#366348] focus:outline-none transition-all"
+                                type="checkbox" />
+                        </div>
+                        <span
+                            class="text-gray-400 line-through text-base font-medium leading-normal group-hover:text-gray-300 transition-colors">Review
+                            PRs</span>
+                    </label>
+                    <!-- Checked Item -->
+                    <label
+                        class="flex gap-x-3 py-2 px-3 flex-row items-center hover:bg-white/5 rounded-xl transition-colors cursor-pointer group">
+                        <div class="relative flex items-center">
+                            <input checked=""
+                                class="peer h-5 w-5 rounded border-[#366348] border-2 bg-transparent text-[#36e27b] checked:bg-[#36e27b] checked:border-[#36e27b] focus:ring-0 focus:ring-offset-0 focus:border-[#366348] focus:outline-none transition-all"
+                                type="checkbox" />
+                        </div>
+                        <span
+                            class="text-gray-400 line-through text-base font-medium leading-normal group-hover:text-gray-300 transition-colors">Update
+                            documentation</span>
+                    </label>
+                    <!-- Unchecked Item -->
+                    <label
+                        class="flex gap-x-3 py-2 px-3 flex-row items-center hover:bg-white/5 rounded-xl transition-colors cursor-pointer group">
+                        <div class="relative flex items-center">
+                            <input
+                                class="peer h-5 w-5 rounded border-[#366348] border-2 bg-transparent text-[#36e27b] checked:bg-[#36e27b] checked:border-[#36e27b] focus:ring-0 focus:ring-offset-0 focus:border-[#366348] focus:outline-none transition-all"
+                                type="checkbox" />
+                        </div>
+                        <span
+                            class="text-secondary text-base font-medium leading-normal group-hover:text-primary transition-colors">Team
+                            sync</span>
+                    </label>
+                    <!-- Unchecked Item -->
+                    <label
+                        class="flex gap-x-3 py-2 px-3 flex-row items-center hover:bg-white/5 rounded-xl transition-colors cursor-pointer group">
+                        <div class="relative flex items-center">
+                            <input
+                                class="peer h-5 w-5 rounded border-[#366348] border-2 bg-transparent text-[#36e27b] checked:bg-[#36e27b] checked:border-[#36e27b] focus:ring-0 focus:ring-offset-0 focus:border-[#366348] focus:outline-none transition-all"
+                                type="checkbox" />
+                        </div>
+                        <span
+                            class="text-secondary text-base font-medium leading-normal group-hover:text-primary transition-colors">Plan
+                            Q4 Roadmap</span>
+                    </label>
+                    <!-- Add Item Row -->
+                    <div
+                        class="flex gap-x-3 py-2 px-3 flex-row items-center text-gray-500 hover:text-primary cursor-pointer mt-2 group">
+                        <span class="material-symbols-outlined text-[20px]">add</span>
+                        <span class="text-sm font-medium">Add task</span>
+                    </div>
+                </div>
+            </div>
+            }@else if (item.type==2){
+            <div class="bg-[#e2e8f0] dark:bg-[#2A4034] rounded-xl p-3 shadow-elevation-2 border border-[#254632]">
+                <div class="bg-cover bg-center flex flex-col items-stretch justify-end rounded-lg h-[240px] shadow-inner relative overflow-hidden"
+                    data-alt="Calm morning landscape with sunrise gradient" style="
+                        background-image:
+                        linear-gradient(0deg, rgba(0, 0, 0, 0.7) 0%, rgba(0, 0, 0, 0) 60%),
+                        url(&quot;https://lh3.googleusercontent.com/aida-public/AB6AXuAhUtuSk3NmQlReR492PP-kSx93ibx2cFyVWacawyecpKp6V0EkK1GiXF4IluLfP6sxM7hdOInG6bBKJ9KVPZAdFZoCdPJUAyLiuYAzfn5fEVTcwTv_y0raNKxkXMavLcHeAm3DaM66Yoof8qqOL2fjin37Yj-xeq84LNg9pW-4jWzRWYJijrgb5SdpIvvKp0Rn5o7Ssvk1sUx2eBLcLCFkVlkvzivpTABT8XIbt_gZdgwgHPny-EABkLaKnqqV8Uw1PtY5z4GF_Z8&quot;);
+                    ">
+                    <div class="absolute top-3 right-3 bg-black/40 backdrop-blur-sm rounded-full p-1.5 text-secondary">
+                        <span class="material-symbols-outlined text-[18px]">image</span>
+                    </div>
+                    <div class="flex w-full items-end justify-between gap-4 p-5">
+                        <div class="flex flex-1 flex-col gap-1">
+                            <p class="text-secondary tracking-tight text-xl font-bold leading-tight">Morning Routine</p>
+                            <p class="text-primary text-sm font-medium leading-normal flex items-center gap-1">
+                                <span class="material-symbols-outlined text-[16px]">timer</span>
+                                45 mins
+                            </p>
+                        </div>
+                    </div>
+                </div>
+                <div class="p-3">
+                    <p class="text-secondary text-sm">Remember to hydrate before coffee.</p>
+                </div>
+            </div>
+            }@else if (item.type==3){
+            <div
+                class="bg-[#e2e8f0] dark:bg-[#2A4034] rounded-tr-[2rem] rounded-bl-[2rem] rounded-tl-lg rounded-br-lg p-5 shadow-elevation-2 border border-[#366348]/30 w-50">
+                <div class="flex items-center gap-2 mb-2 text-[#36e27b]">
+                    <span class="material-symbols-outlined text-[18px]">lightbulb</span>
+                    <span class="text-xs font-bold uppercase tracking-wider text-text-primary"> Idea</span>
+                </div>
+                <p class="text-text-secondary text-lg font-handwriting leading-relaxed">Buy groceries for the weekend dinner
+                    party. Don't forget the wine! 🍷</p>
+            </div>
+            }
+        </div>
+        }
+    </div>
+</div>
+
+<div class="fixed bottom-8 right-8 z-50 flex flex-col items-end gap-4">
+    <!-- FAB Container -->
+    <button
+        class="flex items-center gap-3 bg-primary text-[#122118] h-14 pl-5 pr-7 rounded-2xl shadow-elevation-3 hover:brightness-110 active:scale-95 transition-all duration-300 group">
+        <span
+            class="material-symbols-outlined text-[28px] transition-transform duration-300 group-hover:rotate-90">add</span>
+        <span class="text-base font-bold tracking-wide">Add Item</span>
+    </button>
+</div>
