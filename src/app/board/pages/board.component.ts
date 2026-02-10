@@ -8,7 +8,7 @@ import { RouterLink } from "@angular/router";
     templateUrl: './board.component.html',
     styleUrls: ['./board.component.css'],
     standalone: true,
-    imports:[DragDropModule,RouterLink]
+    imports: [DragDropModule, RouterLink]
 })
 export class BoardComponent implements OnInit {
     darkMode:boolean = true;
@@ -53,18 +53,18 @@ export class BoardComponent implements OnInit {
     private startPanY = 0;
 
     startPanning(event: MouseEvent) {
-        // if ((event.target as HTMLElement).classList.contains('viewport') || 
-        //     (event.target as HTMLElement).classList.contains('grid-background')) {
+        if ((event.target as HTMLElement).classList.contains('viewport') || 
+            (event.target as HTMLElement).classList.contains('grid-background')) {
         
-        //     this.isPanning = true;
-        //     this.startMouseX = event.clientX;
-        //     this.startMouseY = event.clientY;
-        //     this.startPanX = this.panX();
-        //     this.startPanY = this.panY();
+            this.isPanning = true;
+            this.startMouseX = event.clientX;
+            this.startMouseY = event.clientY;
+            this.startPanX = this.panX();
+            this.startPanY = this.panY();
             
-        //     // Change cursor to 'grabbing'
-        //     (event.currentTarget as HTMLElement).style.cursor = 'grabbing';
-        // }
+            // Change cursor to 'grabbing'
+            (event.currentTarget as HTMLElement).style.cursor = 'grabbing';
+        }
     }
     @HostListener('window:mousemove', ['$event'])
     onMouseMove(event: MouseEvent) {
@@ -89,30 +89,35 @@ export class BoardComponent implements OnInit {
     }
 
     handleZoom(event: WheelEvent) {
-        // event.preventDefault(); // Stop the whole page from scrolling
+        event.preventDefault(); // Stop the whole page from scrolling
 
-        // const zoomIntensity = 0.1;
-        // const wheel = event.deltaY < 0 ? 1 : -1;
-        // const zoomFactor = Math.exp(wheel * zoomIntensity);
+        const zoomIntensity = 0.1;
+        const wheel = event.deltaY < 0 ? 1 : -1;
+        const zoomFactor = Math.exp(wheel * zoomIntensity);
 
-        // const currentZoom = this.zoom();
-        // const nextZoom = Math.min(Math.max(currentZoom * zoomFactor, 0.1), 5); // Limit zoom 0.1x to 5x
+        const currentZoom = this.zoom();
+        const nextZoom = Math.min(Math.max(currentZoom * zoomFactor, 0.1), 5); // Limit zoom 0.1x to 5x
 
-        // // 1. Get mouse position relative to the viewport
-        // const mouseX = event.clientX;
-        // const mouseY = event.clientY;
+        // 1. Get mouse position relative to the viewport
+        const mouseX = event.clientX;
+        const mouseY = event.clientY;
 
-        // // 2. Calculate mouse position relative to the "World" (Surface)
-        // // Formula: (MousePos - CurrentPan) / CurrentZoom
-        // const worldX = (mouseX - this.panX()) / currentZoom;
-        // const worldY = (mouseY - this.panY()) / currentZoom;
+        // 2. Calculate mouse position relative to the "World" (Surface)
+        // Formula: (MousePos - CurrentPan) / CurrentZoom
+        const worldX = (mouseX - this.panX()) / currentZoom;
+        const worldY = (mouseY - this.panY()) / currentZoom;
 
-        // // 3. Update Zoom
-        // this.zoom.set(nextZoom);
+        // 3. Update Zoom
+        this.zoom.set(nextZoom);
 
-        // // 4. Update Pan to keep the worldX/worldY under the cursor
-        // // New Pan = MousePos - (WorldPos * NewZoom)
-        // this.panX.set(mouseX - worldX * nextZoom);
-        // this.panY.set(mouseY - worldY * nextZoom);
+        // 4. Update Pan to keep the worldX/worldY under the cursor
+        // New Pan = MousePos - (WorldPos * NewZoom)
+        this.panX.set(mouseX - worldX * nextZoom);
+        this.panY.set(mouseY - worldY * nextZoom);
+    }
+    panning:boolean = false;
+    togglePanning() {
+        this.panning = !this.panning
+
     }
 }
