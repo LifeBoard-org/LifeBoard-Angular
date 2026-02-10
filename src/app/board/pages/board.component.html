@@ -32,15 +32,15 @@
                 <span class="material-symbols-outlined">more_vert</span>
             </button>
             <div class="w-[1px] h-6 bg-[#254632] mx-1"></div>
-            <span (click)="toggle()"
-                class="material-symbols-outlined text-[24px] cursor-pointer">{{darkMode?'dark_mode':'light_mode'}}</span>
+            <span (click)="toggle()" class="material-symbols-outlined text-[24px] cursor-pointer">{{darkMode?'dark_mode':'light_mode'}}</span>
+            <div class="w-[1px] h-6 bg-[#254632] mx-1"></div>
+            <span (click)="togglePanning()" class="material-symbols-outlined text-[24px] cursor-pointer">{{panning?'pan_tool_alt':'pan_tool'}}</span>
         </div>
     </div>
 </header>
-<div class="viewport" >
+<div id="viewPort-board" class="viewport " (mousedown)="startPanning($event)"  >
     <!-- (mousedown)="startPanning($event)" (wheel)="handleZoom($event)" -->
-    <div class="canvas-surface bg-dot-pattern " [style.transform]="surfaceTransform()">
-        <!-- <div  class="bg-dot-pattern"></div> -->
+    <div id="overlay-board" class="canvas-surface canvas-overlay bg-dot-pattern" [style.z-index]="panning ? -1 : 'auto'"  (wheel)="handleZoom($event)" [style.transform]="surfaceTransform()">
 
         @for (item of boardItems(); track item.id) {
         <div class=" absolute cursor-move hover:z-10  hover:scale-[1.01] " cdkDrag [style.left.px]="item.x"
