@@ -1,41 +1,78 @@
-/* board.component.scss */
+/* board.component.css */
 .viewport {
-    background-color: var(--surface);
-    width: 100vw;
-    height: 100vh;
-    overflow: hidden;
-    cursor: grab;
-    position: relative;
-    /* Prevent text selection while panning */
-    user-select: none;
-  }
-  
-  .canvas-surface {
-    position: absolute;
-    top: 0;
-    left: 0;
-    /* We use a large area, but translate moves the "zero point" */
-    width: 1px; 
-    height: 1px;
-    transform-origin: 0 0;
-    will-change: transform; /* Hint to the browser for GPU acceleration */
-  }
-  
-  .bg-dot-pattern {
-    background-image: radial-gradient(#254632 1px, transparent 1px);
-    background-size: 24px 24px;
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
+  position: relative;
+  background-color: var(--board-surface);
+  touch-action: none; /* Disables browser gestures to handle them manually */
+}
 
-    /* top: -1000px;
-    left: -1000px; */
-    /* width: 2000px;
-    height: 2000px; */
-    /* border:1px solid red; */
-  }
+/* The infinite surface that moves and scales */
+.canvas-surface {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 0;   /* Width/Height don't matter, it's just an origin point */
+  height: 0;
+  transform-origin: 0 0; 
+  will-change: transform;
+}
+
+/* The dot pattern background */
+.bg-dot-pattern {
+  width: 100000px; /* Huge area */
+  height: 100000px;
+  /* Center the huge div so (0,0) is in the middle of it */
+  transform: translate(-50000px, -50000px); 
   
-  .canvas-overlay {
-    position: absolute;
-    width: 100%;
-    height: 100%;
-    top: 0%;
-    right: 0%;
-  }
+  background-image: radial-gradient(#959595 1px, transparent 1px);
+  background-size: 24px 24px; /* Grid spacing */
+}
+
+
+
+
+.board-item {
+  position: absolute;
+  /* Remove transform:translate(-50%) so drag coordinates are 1:1 with top/left */
+  /* If you want to center on creation, handle that in the TS logic */
+  border-radius: 8px;
+  cursor: grab;
+  border: 1px solid rgba(0,0,0,0.1);
+  /* Prevent text selection while dragging */
+  user-select: none;
+  /* Important for performance */
+  will-change: transform, width, height; 
+  /* background: white; */
+  overflow: hidden;
+}
+
+.board-item:hover {
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+  z-index: 10; /* Bring hovered item to front */
+}
+
+
+.board-item:active {
+  cursor: grabbing;
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.2);
+  z-index: 100; /* Bring to front while dragging */
+}
+
+/* The Resize Handle */
+.resize-handle {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  width: 20px;
+  height: 20px;
+  cursor: nwse-resize; /* Diagonal resize cursor */
+  /* Make a visible corner */
+  background: linear-gradient(135deg, transparent 50%, rgba(0,0,0,0.2) 50%);
+  z-index: 10;
+}
+
+.resize-handle:hover {
+  background: linear-gradient(135deg, transparent 50%, rgba(0,0,0,0.5) 50%);
+}

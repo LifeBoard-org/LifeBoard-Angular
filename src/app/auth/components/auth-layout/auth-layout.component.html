@@ -1,7 +1,104 @@
-<!-- <div class="min-h-screen flex items-center justify-center bg-surface px-4">
-      <div
-        class="w-full max-w-md rounded-2xl border border-outline bg-surface-container p-6 shadow-sm"
-      > -->
-        <router-outlet></router-outlet>
-      <!-- </div>
-    </div> -->
+<div class="relative flex h-[100dvh] overflow-hidden flex-col">
+    <!-- Main Layout Container -->
+    <main class="flex-grow flex flex-col lg:flex-row p-4 lg:p-6 gap-4 lg:gap-6 h-full">
+        <!-- Left Section: Content & Auth -->
+         <div class="w-[50%]" >
+           <router-outlet></router-outlet>
+         </div>
+        <!-- Right Section: Visual Visualization -->
+        <!-- Using min-h-[500px] to ensure visibility on tablet vertical stack if needed, though hidden on small mobile by default unless flex-col is active -->
+        <div
+            class="hidden lg:flex flex-1 rounded-[3rem] bg-gradient-to-br from-[#eefcf4] to-[#f0fff6] dark:from-[#0f251a] dark:to-[#0a1811] relative overflow-hidden items-center justify-center ring-1 ring-slate-100 dark:ring-slate-800/50">
+            <!-- Abstract background elements -->
+            <div
+                class="absolute top-0 right-0 w-full h-full bg-[radial-gradient(ellipse_at_top_right,_var(--tw-gradient-stops))] from-primary/10 via-transparent to-transparent">
+            </div>
+            <div
+                class="absolute bottom-0 left-0 w-full h-full bg-[radial-gradient(ellipse_at_bottom_left,_var(--tw-gradient-stops))] from-blue-400/5 via-transparent to-transparent">
+            </div>
+            <!-- The Heatmap / Grid Visualization -->
+            <div class="relative w-[80%] max-w-[600px] animate-float z-10">
+                <div
+                    class="heatmap-grid p-6 bg-white/20 dark:bg-white/5 backdrop-blur-md rounded-[2.5rem] shadow-2xl shadow-slate-200/50 dark:shadow-black/50 border border-white/40 dark:border-white/5">
+                    <!-- Generating a decorative grid of "days" -->
+                    <!-- Row 1 -->
+                    <div class="heatmap-cell bg-white/60 dark:bg-white/10"></div>
+                    <div class="heatmap-cell bg-primary/40 dark:bg-primary/20"></div>
+                    <div class="heatmap-cell bg-white/60 dark:bg-white/10"></div>
+                    <div class="heatmap-cell bg-white/60 dark:bg-white/10"></div>
+                    <div class="heatmap-cell bg-primary shadow-lg shadow-primary/30 scale-105"></div>
+                    <div class="heatmap-cell bg-primary/60 dark:bg-primary/40"></div>
+                    <div class="heatmap-cell bg-white/60 dark:bg-white/10"></div>
+                    <!-- Row 2 -->
+                    <div class="heatmap-cell bg-white/60 dark:bg-white/10"></div>
+                    <div class="heatmap-cell bg-white/60 dark:bg-white/10"></div>
+                    <div class="heatmap-cell bg-primary/80 dark:bg-primary/60 shadow-md"></div>
+                    <div class="heatmap-cell bg-white/60 dark:bg-white/10"></div>
+                    <div class="heatmap-cell bg-white/60 dark:bg-white/10"></div>
+                    <div class="heatmap-cell bg-primary/30 dark:bg-primary/10"></div>
+                    <div class="heatmap-cell bg-white/60 dark:bg-white/10"></div>
+                    <!-- Row 3 -->
+                    <div class="heatmap-cell bg-primary/90 shadow-md"></div>
+                    <div class="heatmap-cell bg-primary/50"></div>
+                    <div class="heatmap-cell bg-white/60 dark:bg-white/10"></div>
+                    <div class="heatmap-cell bg-primary shadow-lg shadow-primary/30 scale-105"></div>
+                    <div class="heatmap-cell bg-primary/70"></div>
+                    <div class="heatmap-cell bg-white/60 dark:bg-white/10"></div>
+                    <div class="heatmap-cell bg-primary/20"></div>
+                    <!-- Row 4 -->
+                    <div class="heatmap-cell bg-white/60 dark:bg-white/10"></div>
+                    <div class="heatmap-cell bg-white/60 dark:bg-white/10"></div>
+                    <div class="heatmap-cell bg-primary/40"></div>
+                    <div class="heatmap-cell bg-primary/90 shadow-md"></div>
+                    <div class="heatmap-cell bg-primary/60"></div>
+                    <div class="heatmap-cell bg-white/60 dark:bg-white/10"></div>
+                    <div class="heatmap-cell bg-white/60 dark:bg-white/10"></div>
+                    <!-- Row 5 -->
+                    <div class="heatmap-cell bg-primary/30"></div>
+                    <div class="heatmap-cell bg-white/60 dark:bg-white/10"></div>
+                    <div class="heatmap-cell bg-white/60 dark:bg-white/10"></div>
+                    <div class="heatmap-cell bg-primary shadow-lg shadow-primary/30 scale-105"></div>
+                    <div class="heatmap-cell bg-white/60 dark:bg-white/10"></div>
+                    <div class="heatmap-cell bg-white/60 dark:bg-white/10"></div>
+                    <div class="heatmap-cell bg-primary/80"></div>
+                    <!-- Row 6 -->
+                    <div class="heatmap-cell bg-white/60 dark:bg-white/10"></div>
+                    <div class="heatmap-cell bg-primary/50"></div>
+                    <div class="heatmap-cell bg-primary/20"></div>
+                    <div class="heatmap-cell bg-white/60 dark:bg-white/10"></div>
+                    <div class="heatmap-cell bg-primary/90 shadow-md"></div>
+                    <div class="heatmap-cell bg-white/60 dark:bg-white/10"></div>
+                    <div class="heatmap-cell bg-white/60 dark:bg-white/10"></div>
+                </div>
+                <!-- Floating Card - Streak -->
+                <div
+                    class="absolute -right-6 top-12 bg-surface-light dark:bg-slate-800 p-4 rounded-2xl shadow-xl shadow-slate-200/50 dark:shadow-black/30 flex items-center gap-4 border border-slate-100 dark:border-slate-700 animate-bounce [animation-duration:4s]">
+                    <div class="w-12 h-12 rounded-full bg-primary/20 flex items-center justify-center text-primary">
+                        <span class="material-symbols-outlined">local_fire_department</span>
+                    </div>
+                    <div class="pr-2">
+                        <div class="text-[10px] text-slate-400 font-bold uppercase tracking-wider">Current Streak</div>
+                        <div class="text-xl font-bold text-slate-900 dark:text-white">12 Days</div>
+                    </div>
+                </div>
+                <!-- Floating Card - Mood -->
+                <div
+                    class="absolute -left-8 bottom-20 bg-surface-light dark:bg-slate-800 p-4 rounded-2xl shadow-xl shadow-slate-200/50 dark:shadow-black/30 flex items-center gap-4 border border-slate-100 dark:border-slate-700 animate-bounce [animation-duration:5s] [animation-delay:1s]">
+                    <div
+                        class="w-12 h-12 rounded-full bg-blue-100 dark:bg-blue-900/30 flex items-center justify-center text-blue-500">
+                        <span class="material-symbols-outlined">sentiment_satisfied</span>
+                    </div>
+                    <div class="pr-2">
+                        <div class="text-[10px] text-slate-400 font-bold uppercase tracking-wider">Today's Mood</div>
+                        <div class="text-xl font-bold text-slate-900 dark:text-white">Productive</div>
+                    </div>
+                </div>
+            </div>
+            <!-- Soft text overlay for atmosphere -->
+            <div class="absolute bottom-12 text-center opacity-60">
+                <p class="text-primary-dark dark:text-primary text-xs font-bold tracking-[0.2em] uppercase">Your Life •
+                    Visualized</p>
+            </div>
+        </div>
+    </main>
+</div>

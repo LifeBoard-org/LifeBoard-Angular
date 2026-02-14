@@ -31,6 +31,7 @@ interface HeatmapCell {
   styleUrls: ['./home.component.css'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
+
 export class HomeComponent {
   readonly userName = signal('Alex');
   readonly currentDate = signal(new Date());
