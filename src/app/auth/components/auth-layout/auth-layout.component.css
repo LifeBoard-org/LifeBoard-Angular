@@ -1,0 +1,29 @@
+
+.heatmap-grid {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 12px;
+}
+.heatmap-cell {
+    aspect-ratio: 1;
+    border-radius: 16px;
+    transition: all 0.3s ease;
+}
+/* Subtle float animation */
+@keyframes float-slow {
+    0%, 100% { transform: translateY(0px) rotate(-5deg); }
+    50% { transform: translateY(-10px) rotate(-5deg); }
+}
+.animate-float {
+    animation: float-slow 6s ease-in-out infinite;
+}
+
+/* Hide scrollbar but allow scrolling */
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
+}
+
+.scrollbar-hide {
+  -ms-overflow-style: none;  /* IE & Edge */
+  scrollbar-width: none;     /* Firefox */
+}

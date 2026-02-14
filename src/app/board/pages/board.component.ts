@@ -1,6 +1,11 @@
-import { Component, computed, OnInit, signal, HostListener } from "@angular/core";
-import { CdkDragEnd, DragDropModule } from '@angular/cdk/drag-drop';
+import { Component, computed, HostListener, signal } from "@angular/core";
 import { ThemeService } from "../../core/theme/theme.service";
+import { BoardItem, BoardItemType } from "./board.types";
+import { CdkDragEnd, DragDropModule } from '@angular/cdk/drag-drop';
+import { CommonModule } from "@angular/common";
+import { Image } from "../components/image/image";
+import { Tasklist } from "../components/tasklist/tasklist";
+import { Note } from "../components/note/note";
 import { RouterLink } from "@angular/router";
 
 @Component({
@@ -8,116 +13,243 @@ import { RouterLink } from "@angular/router";
     templateUrl: './board.component.html',
     styleUrls: ['./board.component.css'],
     standalone: true,
-    imports: [DragDropModule, RouterLink]
+    imports: [DragDropModule, CommonModule,Image,Tasklist,Note,RouterLink]
 })
-export class BoardComponent implements OnInit {
-    darkMode:boolean = true;
+export class BoardComponent {
+
+    darkMode: boolean = true;
+
     constructor(
-        private themeServices:ThemeService
-    ){
+        private themeServices: ThemeService
+    ) {
         this.darkMode = this.themeServices.isDarkMode()
     }
-    ngOnInit(): void {
-        console.log('BoardComponent');
-    }
-    toggle(){
-        this.darkMode = !this.darkMode
-        this.themeServices.toggle()
-    }
+
+    itemTypes:{type:BoardItemType,name:string}[] = [
+        {type:'note',name:'Note'},
+        {type:'task',name:'Task'},
+        {type:'image',name:'Image'},
+    ]
 
     panX = signal(0);
     panY = signal(0);
     zoom = signal(1);
 
-    // Derived transform string for the CSS
+    isPanning = signal(false);
+    // Track if user is actively dragging the mouse
+    isDragging = false;
+    isResizingItem = false;
+
+    // Resize temporary state
+    resizeActiveItem: BoardItem | null = null;
+    resizeStartWidth = 0;
+    resizeStartHeight = 0;
+
+    // --- Computed Styles ---
+
+    // The main transform string for the canvas
     surfaceTransform = computed(() =>
         `translate(${this.panX()}px, ${this.panY()}px) scale(${this.zoom()})`
     );
 
-    boardItems = signal([
-        { id: '1', x: 100, y: 100,type:1, content: 'First Task' },
-        { id: '2', x: 450, y: 350,type:2, content: 'Second Task' },
-        { id: '3', x: 900, y: 150,type:3, content: 'third Task' },
-    ]);
+    // Dynamic cursor based on state
+    cursorStyle = computed(() => {
+        if (this.isDragging) return 'grabbing';
+        if (this.isPanning()) return 'grab';
+        return 'default';
+    });
 
-    onDragEnd(event: CdkDragEnd, item: any) {
-        const { x, y } = event.dropPoint;
-        // Logic to update the signal array with new coordinates
-    }
+    // --- Mouse Event State ---
+    private startX = 0;
+    private startY = 0;
+    private initialPanX = 0;
+    private initialPanY = 0;
 
+    // --- Event Handlers ---
 
-    private isPanning = false;
-    private startMouseX = 0;
-    private startMouseY = 0;
-    private startPanX = 0;
-    private startPanY = 0;
+    // 1. Wheel: Handles Zoom (Ctrl+Wheel) and Pan (Wheel only)
+    @HostListener('wheel', ['$event'])
+    onWheel(event: WheelEvent) {
+        event.preventDefault();
 
-    startPanning(event: MouseEvent) {
-        if ((event.target as HTMLElement).classList.contains('viewport') || 
-            (event.target as HTMLElement).classList.contains('grid-background')) {
-        
-            this.isPanning = true;
-            this.startMouseX = event.clientX;
-            this.startMouseY = event.clientY;
-            this.startPanX = this.panX();
-            this.startPanY = this.panY();
-            
-            // Change cursor to 'grabbing'
-            (event.currentTarget as HTMLElement).style.cursor = 'grabbing';
+        // SCENARIO 1: ZOOM (Ctrl + Wheel)
+        if (event.ctrlKey) {
+            const zoomIntensity = 0.001; // Sensitivity
+            const delta = -event.deltaY;
+            const zoomFactor = Math.exp(delta * zoomIntensity);
+
+            const currentZoom = this.zoom();
+            // Clamp zoom level between 0.1x and 5x
+            const nextZoom = Math.min(Math.max(currentZoom * zoomFactor, 0.1), 5);
+
+            // Calculate mouse position relative to the world
+            // to ensure we zoom "towards" the mouse pointer
+            const mouseX = event.clientX;
+            const mouseY = event.clientY;
+
+            const worldX = (mouseX - this.panX()) / currentZoom;
+            const worldY = (mouseY - this.panY()) / currentZoom;
+
+            // Update Zoom
+            this.zoom.set(nextZoom);
+
+            // Adjust Pan to keep the world point stable
+            this.panX.set(mouseX - worldX * nextZoom);
+            this.panY.set(mouseY - worldY * nextZoom);
+        }
+        // SCENARIO 2: PAN (Wheel only - e.g. Trackpad or Mouse Wheel)
+        else if(event.shiftKey) {
+            this.panX.update(x => x - event.deltaX);
+            this.panY.update(y => y - event.deltaY);
         }
     }
+
+    // 2. Mouse Down: Initiates Drag Panning
+    onMouseDown(event: MouseEvent) {
+        // Allow panning if Space is held OR Middle Mouse Button is clicked
+        if (this.isPanning() || event.button === 1) {
+            this.isDragging = true;
+            this.startX = event.clientX;
+            this.startY = event.clientY;
+            this.initialPanX = this.panX();
+            this.initialPanY = this.panY();
+        }
+    }
+
+    // 3. Mouse Move: Updates Pan while dragging
     @HostListener('window:mousemove', ['$event'])
     onMouseMove(event: MouseEvent) {
-        if (!this.isPanning) return;
+        if (this.isPanning()) {
+            const dx = event.clientX - this.startX;
+            const dy = event.clientY - this.startY;
+            this.panX.set(this.initialPanX + dx);
+            this.panY.set(this.initialPanY + dy);
+            return;
+        }
 
-        // Calculate how far the mouse has moved
-        const dx = event.clientX - this.startMouseX;
-        const dy = event.clientY - this.startMouseY;
+        // 2. Handle Item Resizing
+        if (this.isResizingItem && this.resizeActiveItem) {
+            const dx = event.clientX - this.startX;
+            const dy = event.clientY - this.startY;
 
-        // Update the Signals
-        this.panX.set(this.startPanX + dx);
-        this.panY.set(this.startPanY + dy);
+            // Convert screen delta to world delta
+            const worldDx = dx / this.zoom();
+            const worldDy = dy / this.zoom();
+
+            // Update the specific item
+            this.boardItems.update(items => items.map(i => {
+                if (i.id === this.resizeActiveItem!.id) {
+                    return {
+                        ...i,
+                        width: Math.max(100, this.resizeStartWidth + worldDx), // Min width 100
+                        height: Math.max(80, this.resizeStartHeight + worldDy) // Min height 80
+                    };
+                }
+                return i;
+            }));
+        }
     }
 
-    // 3. Global listener for mouse release
+    // 4. Mouse Up: Stops Dragging
     @HostListener('window:mouseup')
     onMouseUp() {
-        this.isPanning = false;
-        // Reset cursor
-        const viewport = document.querySelector('.viewport') as HTMLElement;
-        if (viewport) viewport.style.cursor = 'grab';
+        this.isDragging = false;
+        this.isResizingItem = false;
+        this.resizeActiveItem = null;
     }
 
-    handleZoom(event: WheelEvent) {
-        event.preventDefault(); // Stop the whole page from scrolling
-
-        const zoomIntensity = 0.1;
-        const wheel = event.deltaY < 0 ? 1 : -1;
-        const zoomFactor = Math.exp(wheel * zoomIntensity);
-
-        const currentZoom = this.zoom();
-        const nextZoom = Math.min(Math.max(currentZoom * zoomFactor, 0.1), 5); // Limit zoom 0.1x to 5x
-
-        // 1. Get mouse position relative to the viewport
-        const mouseX = event.clientX;
-        const mouseY = event.clientY;
-
-        // 2. Calculate mouse position relative to the "World" (Surface)
-        // Formula: (MousePos - CurrentPan) / CurrentZoom
-        const worldX = (mouseX - this.panX()) / currentZoom;
-        const worldY = (mouseY - this.panY()) / currentZoom;
-
-        // 3. Update Zoom
-        this.zoom.set(nextZoom);
-
-        // 4. Update Pan to keep the worldX/worldY under the cursor
-        // New Pan = MousePos - (WorldPos * NewZoom)
-        this.panX.set(mouseX - worldX * nextZoom);
-        this.panY.set(mouseY - worldY * nextZoom);
+    // 5. Spacebar Logic: Toggles 'Grab' mode
+    @HostListener('window:keydown.space', ['$event'])
+    onSpaceDown(event: any) {
+        // Prevent page scroll when pressing space
+        // Only trigger if not already pressed (prevents repeat events)
+        event.preventDefault();
+        if (!this.isPanning()) {
+            this.isPanning.set(true);
+        }
     }
-    panning:boolean = false;
+
+    @HostListener('window:keyup.space')
+    onSpaceUp() {
+        this.isPanning.set(false);
+        this.isDragging = false; // Stop dragging if space is released
+    }
+
     togglePanning() {
-        this.panning = !this.panning
+        this.isPanning.update(p => !p);
+    }
+
+    toggleTheme() {
+        this.darkMode = !this.darkMode
+        this.themeServices.toggle()
+    }
+    getViewportCenterInWorldSpace() {
+        const screenCenterX = window.innerWidth / 2;
+        const screenCenterY = window.innerHeight / 2;
+
+        // Inverse logic: (Screen - Pan) / Zoom
+        const worldX = (screenCenterX - this.panX()) / this.zoom();
+        const worldY = (screenCenterY - this.panY()) / this.zoom();
+
+        return { x: worldX, y: worldY };
+    }
+
+    onDragEnded(event: CdkDragEnd, item: BoardItem) {
+        // 1. Get how far we moved in SCREEN pixels
+        const { x, y } = event.distance;
+
+        // 2. Convert to WORLD units (divide by zoom)
+        const worldDeltaX = x / this.zoom();
+        const worldDeltaY = y / this.zoom();
+
+        // 3. Update the item's permanent position
+        this.boardItems.update(items => items.map(i => {
+            if (i.id === item.id) {
+                return { ...i, x: i.x + worldDeltaX, y: i.y + worldDeltaY };
+            }
+            return i;
+        }));
+
+        // 4. Reset CDK's internal transform so it doesn't double-apply visually
+        event.source.reset();
+    }
+    startResizing(event: MouseEvent, item: BoardItem) {
+        event.preventDefault();
+        event.stopPropagation(); // Stop the drag from triggering
+
+        this.isResizingItem = true;
+        this.resizeActiveItem = item;
+        this.startX = event.clientX;
+        this.startY = event.clientY;
+        this.resizeStartWidth = item.width;
+        this.resizeStartHeight = item.height;
+    }
+
+    trackById(index: number, item: BoardItem) {
+        return item.id;
+    }
+
+
+
+
+
+
+    //Adding items
+    boardItems = signal<BoardItem[]>([]);
+
+    addItem(type: 'note' | 'task' | 'image') {
+        const center = this.getViewportCenterInWorldSpace();
+        const newItem: BoardItem = {
+            id: Date.now(),
+            type,
+            x: center.x,
+            y: center.y,
+            width: 200,  // Default Width
+            height: 150, // Default Height
+            content: type === 'note' ? 'New Idea' : 'To Do',
+            color: type === 'note' ? '#fff9c4' : '#e1f5fe'
+        };
+        this.boardItems.update(items => [...items, newItem]);
 
     }
 }
