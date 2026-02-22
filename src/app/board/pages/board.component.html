@@ -45,18 +45,21 @@
     <div class="canvas-surface" [style.transform]="surfaceTransform()">
         <div class="bg-dot-pattern"></div>
         @for (item of boardItems(); track item.id) {
-        <div class="board-item shadow-elevation-1" cdkDrag [cdkDragDisabled]=" isPanning() || isResizingItem"
-            (cdkDragEnded)="onDragEnded($event, item)" [style.left.px]="item.x" [style.top.px]="item.y"
-            [style.width.px]="item.width" [style.height.px]="item.height" >
-            <div class="h-full w-full">
-                @if (item.type=='task') {
-                    <app-tasklist></app-tasklist>
-                }@else if(item.type=='image') {
-                    <app-image></app-image>
-                }@else if(item.type=='note'){
-                    <app-note></app-note>
-                }
+        <div class="board-item shadow-elevation-1 group/board" cdkDrag
+            [cdkDragDisabled]=" isPanning() || isResizingItem" (cdkDragEnded)="onDragEnded($event, item)"
+            [style.left.px]="item.x" [style.top.px]="item.y" [style.width.px]="item.width"
+            [style.height.px]="item.height">
+            <div class="h-full w-full bg-transparent">
+                <app-note [content]="item.content" (openEdit)="editItem(item)"></app-note>
             </div>
+
+            <!-- Absolute drag handle mirroring the note.html edit button positioning -->
+            @if (!item.content.isEditing) {
+            <div cdkDragHandle
+                class="absolute top-2 right-12 bg-black/10 hover:bg-black/20 dark:bg-white/10 dark:hover:bg-white/20 text-text-primary rounded-full w-8 h-8 flex items-center justify-center opacity-0 group-hover/board:opacity-100 transition-opacity z-10 hidden md:flex cursor-grab active:cursor-grabbing">
+                <span class="material-symbols-outlined text-[18px]">drag_indicator</span>
+            </div>
+            }
 
             <div class="resize-handle" (mousedown)="startResizing($event, item)"></div>
         </div>
@@ -71,16 +74,25 @@
 
     <div class="fixed bottom-4 right-4 z-50 flex flex-col items-end gap-4">
         <!-- FAB Container -->
-        <div class="bottom-[70%] absolute bg-primary w-[80%] rounded right-[10%] overflow-hidden pb-10">
+        <!-- <div class="bottom-[70%] absolute bg-primary w-[80%] rounded right-[10%] overflow-hidden pb-10">
             @for (item of itemTypes; track $index) {
                 <div (click)="addItem(item.type)" >{{item.name}}</div>
             }
-        </div>
-        <button
+        </div> -->
+        <button (click)="addItem('note')"
             class="flex items-center gap-3 bg-primary text-[#122118] h-12 pl-5 pr-7 rounded-2xl shadow-elevation-3 hover:brightness-110 active:scale-95 transition-all duration-300 group">
+
             <span
                 class="material-symbols-outlined text-[28px] transition-transform duration-300 group-hover:rotate-90">add</span>
             <span class="text-base font-bold tracking-wide">Add Item</span>
         </button>
     </div>
 </div>
+@if(activeItem()){
+<div
+    class="w-screen h-screen bg-black/50 backdrop-blur-sm fixed top-0 left-0 z-50 flex items-center justify-center animate-fade-in">
+    <div class="w-[600px] h-[400px]">
+        <app-note [content]="activeItem()!.content" (closeModal)="closeModal()"></app-note>
+    </div>
+</div>
+}

@@ -1,19 +1,17 @@
-import { Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { ThemeService } from '../../../core/theme/theme.service';
 
 @Component({
-  standalone: true,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [RouterLink],
-  templateUrl:'./auth-landing.component.html',
-  styleUrl:'./auth-landing.component.css'
+  templateUrl: './auth-landing.component.html',
+  styleUrl: './auth-landing.component.css'
 })
 export class AuthLandingComponent {
-  constructor(
-    private readonly themeService:ThemeService
-  ){}
+  private readonly themeService = inject(ThemeService);
 
-  toggle(){
+  toggle() {
     this.themeService.toggle();
   }
 }

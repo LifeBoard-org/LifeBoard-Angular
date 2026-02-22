@@ -1,21 +1,22 @@
-import { Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { ReactiveFormsModule, FormBuilder, Validators, FormGroup } from '@angular/forms';
 import { RouterLink } from '@angular/router';
 
 @Component({
-  standalone: true,
-  imports: [ReactiveFormsModule,RouterLink],
-  templateUrl:'./signup.component.html',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  imports: [ReactiveFormsModule, RouterLink],
+  templateUrl: './signup.component.html',
 })
 export class SignupComponent {
-    form:FormGroup
-    
-    constructor(private fb: FormBuilder) {
-        this.form = this.fb.group({
-            name: ['', Validators.required],
-            email: ['', [Validators.required, Validators.email]],
-            password: ['', Validators.required]
-        });    
+  form: FormGroup
+
+  private fb = inject(FormBuilder);
+  constructor() {
+    this.form = this.fb.group({
+      name: ['', Validators.required],
+      email: ['', [Validators.required, Validators.email]],
+      password: ['', Validators.required]
+    });
   }
 
   signup() {

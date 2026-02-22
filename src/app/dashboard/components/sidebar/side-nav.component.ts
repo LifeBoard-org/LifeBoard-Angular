@@ -1,5 +1,5 @@
 // side-nav.component.ts
-import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { Router } from '@angular/router';
 import { NavItem } from '../../../core/models/nav-item.model';
 import { ThemeService } from '../../../core/theme/theme.service';
@@ -18,10 +18,8 @@ export class SideNavComponent {
     { label: 'Settings', icon: 'settings', route: '/app/settings' }
   ];
 
-  constructor(
-    private router: Router,
-    private themeServices:ThemeService
-  ) {}
+  private router = inject(Router);
+  private themeServices = inject(ThemeService);
 
   navigate(route: string): void {
     this.router.navigateByUrl(route);
@@ -30,7 +28,7 @@ export class SideNavComponent {
   isActive(route: string): boolean {
     return this.router.url === route;
   }
-  toggle(){
+  toggle() {
     this.themeServices.toggle()
   }
 }

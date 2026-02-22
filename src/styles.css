@@ -1,69 +1,130 @@
 @import "tailwindcss";
 
+@custom-variant dark (&:where(.dark, .dark *));
+
+@theme {
+  --font-display: "Spline Sans", sans-serif;
+  --font-sans: "Spline Sans", sans-serif;
+
+  --radius-*: initial;
+  --radius: 1rem;
+  --radius-lg: 2rem;
+  --radius-xl: 3rem;
+  --radius-2xl: 4rem;
+  --radius-full: 9999px;
+
+  /* Theme Colors extracted from index.html & styles.css */
+  --color-primary: var(--primary);
+  --color-primary-hover: var(--primary-hover);
+
+  --color-background-light: var(--bg-light);
+  --color-background-dark: var(--bg-dark);
+
+  --color-surface: var(--surface);
+  --color-surface-variant: var(--surface-variant);
+  --color-surface-light: var(--surface-light);
+  --color-surface-dark: var(--surface-dark);
+
+  /* Note Colors */
+  --color-note-default: var(--note-default);
+  --color-note-red: var(--note-red);
+  --color-note-orange: var(--note-orange);
+  --color-note-yellow: var(--note-yellow);
+  --color-note-green: var(--note-green);
+  --color-note-teal: var(--note-teal);
+  --color-note-blue: var(--note-blue);
+  --color-note-darkblue: var(--note-darkblue);
+  --color-note-purple: var(--note-purple);
+  --color-note-pink: var(--note-pink);
+  --color-note-brown: var(--note-brown);
+  --color-note-gray: var(--note-gray);
+
+  --color-text-primary: var(--text-primary);
+  --color-text-secondary: var(--text-secondary);
+  --color-theme: var(--border);
+  --color-outline: var(--border);
+  --color-board-surface: var(--board-surface);
+}
+
 /* Light Theme */
 :root {
-  --surface: 255 255 255;
-  --surface-variant: 245 247 250;
+  --primary: #2bee75;
+  --primary-hover: #1fcc62;
 
-  --text-primary: 17 24 39;
-  --text-secondary: 75 85 99;
+  --bg-light: #f6f8f7;
+  --bg-dark: #102217;
 
-  --border: 229 231 235;
+  --surface-light: #ffffff;
+  --surface-dark: #1a2c22;
 
-  --primary: 59 130 246;
-  --primary-hover: 37 99 235;
+  --surface: #ffffff;
+  --surface-variant: #f5f7fa;
 
-  --board-surface: rgb(209, 209, 209);
+  --text-primary: #111827;
+  --text-secondary: #4b5563;
+
+  --border: #e5e7eb;
+
+  --board-surface: #e7e5db;
+
+  /* Note Colors (Light Mode) - Based on Google Keep */
+  --note-default: #ffffff;
+  --note-red: #f28b82;
+  --note-orange: #fbbc04;
+  --note-yellow: #fff475;
+  --note-green: #ccff90;
+  --note-teal: #a7ffeb;
+  --note-blue: #cbf0f8;
+  --note-darkblue: #aecbfa;
+  --note-purple: #d7aefb;
+  --note-pink: #fdcfe8;
+  --note-brown: #e6c9a8;
+  --note-gray: #e8eaed;
+
+  --button-primary: bg-primary text-[#122118] h-12 pl-5 pr-7 rounded-2xl shadow-elevation-3 hover:brightness-110 active:scale-95 transition-all duration-300 group;
+  --button-secondary: bg-secondary text-[#122118] h-12 pl-5 pr-7 rounded-2xl shadow-elevation-3 hover:brightness-110 active:scale-95 transition-all duration-300 group;
 }
 
 /* Dark Theme */
 .dark {
-  --board-surface: rgb(6, 13, 8);
-  --surface: 17 24 39;
-  --surface-variant: 31 41 55;
+  --primary: #2bee75;
+  --primary-hover: #1fcc62;
 
-  --text-primary: 243 244 246;
-  --text-secondary: 156 163 175;
+  --bg-light: #f6f8f7;
+  --bg-dark: #102217;
 
-  --border: 55 65 81;
+  --surface-light: #ffffff;
+  --surface-dark: #1a2c22;
 
-  --primary: 96 165 250;
-  --primary-hover: 147 197 253;
+  --surface: #111827;
+  --surface-variant: #1f2937;
+
+  --text-primary: #f3f4f6;
+  --text-secondary: #9ca3af;
+
+  --border: #374151;
+
+  --board-surface: #060d08;
+
+  /* Note Colors (Dark Mode) - Muted, deeper versions of Google Keep colors */
+  --note-default: var(--surface);
+  --note-red: #5c2b29;
+  --note-orange: #614a19;
+  --note-yellow: #635d19;
+  --note-green: #345920;
+  --note-teal: #16504b;
+  --note-blue: #2d555e;
+  --note-darkblue: #1e3a5f;
+  --note-purple: #42275e;
+  --note-pink: #5c2245;
+  --note-brown: #442f19;
+  --note-gray: #3c3f41;
+
+  --button-primary: bg-primary text-[#122118] h-12 pl-5 pr-7 rounded-2xl shadow-elevation-3 hover:brightness-110 active:scale-95 transition-all duration-300 group;
+  --button-secondary: bg-secondary text-[#122118] h-12 pl-5 pr-7 rounded-2xl shadow-elevation-3 hover:brightness-110 active:scale-95 transition-all duration-300 group;
 }
 
-/* =========================
-     Semantic Utility Aliases
-     ========================= */
-
 @layer utilities {
-  .bg-surface {
-    background-color: rgb(var(--surface));
-  }
-
-  .bg-surface-variant {
-    background-color: rgb(var(--surface-variant));
-  }
-
-  .text-primary {
-    color: rgb(var(--text-primary));
-  }
-
-  .text-secondary {
-    color: rgb(var(--text-secondary));
-  }
-
-  .border-theme {
-    border-color: rgb(var(--border));
-  }
-
-  .bg-primary {
-    background-color: rgb(var(--primary));
-  }
-
-  .bg-primary-hover:hover {
-    background-color: rgb(var(--primary-hover));
-  }
-
   .scrollbar-slim {
     scrollbar-width: thin;
     /* Firefox */
@@ -71,11 +132,40 @@
 
   .scrollbar-slim::-webkit-scrollbar {
     width: 6px;
-    /* Chrome, Safari, Edge */
     height: 6px;
   }
 
   .scrollbar-slim::-webkit-scrollbar-track {
     background: none;
+  }
+
+  .animate-fade-in {
+    animation: fadeIn 0.2s cubic-bezier(0.2, 0, 0, 1) forwards;
+  }
+
+  .animate-scale-up {
+    animation: scaleUp 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes scaleUp {
+  from {
+    opacity: 0;
+    transform: scale(0.9);
+  }
+
+  to {
+    opacity: 1;
+    transform: scale(1);
   }
 }
