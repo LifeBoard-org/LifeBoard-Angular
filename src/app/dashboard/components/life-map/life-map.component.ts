@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, Input, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, Input, OnInit, signal } from '@angular/core';
 import { RouterLink } from '@angular/router';
 
 export type LifeMapIntensity = 0 | 1 | 2 | 3 | 4;
@@ -13,9 +13,9 @@ export interface LifeMapDay {
 
 @Component({
   selector: 'app-life-map',
-  standalone: true,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './life-map.component.html',
-  imports: [CommonModule,RouterLink],
+  imports: [CommonModule, RouterLink],
 })
 export class LifeMapComponent implements OnInit {
 
@@ -26,12 +26,13 @@ export class LifeMapComponent implements OnInit {
   ngOnInit() {
     this.generateMockData();
   }
-  groupedDays:any = {};
+  groupedDays = signal<any>({});
   generateMockData() {
     let firstDay = new Date(this.today.getFullYear(), 0, 1);
     const lastDay = new Date(this.today.getFullYear(), 12, 0);
+    const newGroupedDays: any = {};
     this.months.forEach((m, i) => {
-      this.groupedDays[m] = [];
+      newGroupedDays[m] = [];
       while (firstDay.getMonth() == i) {
         let week = [];
         for (let j = 0; j < 7; j++) {
@@ -49,9 +50,10 @@ export class LifeMapComponent implements OnInit {
           };
         }
 
-        this.groupedDays[m].push(week);
+        newGroupedDays[m].push(week);
       }
     })
+    this.groupedDays.set(newGroupedDays);
   }
 
 }

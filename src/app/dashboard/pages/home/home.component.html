@@ -1,4 +1,4 @@
-<div class="max-w-7xl mx-auto w-full p-4 md:p-8 lg:p-10 flex flex-col gap-8 md:gap-12">
+<div class=" w-full p-4 md:p-8 lg:p-20 flex flex-col gap-8 md:gap-12">
 
     <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
 
@@ -36,7 +36,8 @@
 
         <div class="lg:col-span-4 flex flex-col gap-4 ">
             @for (stat of quickStats(); track stat.label) {
-            <div class="flex-1 bg-surface-light dark:bg-surface-dark rounded-[2rem] p-6 flex items-center justify-between">
+            <div
+                class="flex-1 bg-surface-light dark:bg-surface-dark rounded-[2rem] p-6 flex items-center justify-between">
                 <div>
                     <p class="text-text-secondary text-sm font-medium mb-1">{{ stat.label }}</p>
                     <div class="flex items-baseline gap-2">

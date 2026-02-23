@@ -1,17 +1,17 @@
 <section class="flex flex-col gap-4">
-    <!-- Header -->
-    <div class="flex flex-wrap items-end justify-between gap-4 px-2">
-      <div>
-        <h2 class="text-xl font-bold text-white tracking-tight">
-          Your Life Map
-        </h2>
-        <p class="text-text-secondary text-sm">
-          Visualizing your momentum over the period.
-        </p>
-      </div>
-  
-      <!-- Legend -->
-      <!-- <div class="flex items-center gap-2 text-xs text-text-secondary bg-surface-dark px-3 py-1.5 rounded-full">
+  <!-- Header -->
+  <div class="flex flex-wrap items-end justify-between gap-4 px-2">
+    <div>
+      <h2 class="text-xl font-bold text-white tracking-tight">
+        Your Life Map
+      </h2>
+      <p class="text-text-secondary text-sm">
+        Visualizing your momentum over the period.
+      </p>
+    </div>
+
+    <!-- Legend -->
+    <!-- <div class="flex items-center gap-2 text-xs text-text-secondary bg-surface-dark px-3 py-1.5 rounded-full">
         <span>Less</span>
         <div class="size-3 rounded-full bg-white/5 border border-white/5"></div>
         <div class="size-3 rounded-full bg-primary opacity-30"></div>
@@ -20,44 +20,48 @@
         <span>More</span>
       </div> -->
 
-      <div>
-        <!-- <select>
+    <div>
+      <!-- <select>
           <option value="">a</option>
           <option value="">b</option>
           <option value="">c</option>
         </select> -->
-      </div>
     </div>
-  
-    <!-- Heatmap -->
-    <div class="flex justify-between bg-surface-light dark:bg-surface-dark rounded-[2rem] p-6 md:p-8 overflow-x-auto border border-white/5 shadow-inner">
-      @for (month of months; track $index ) {
-        @if($index==0){
-          <div class="mt-[19px]" >
-            @for(weekday of weekDays; track weekday){
-              <div class="h-[13px]  text-[5px] m-[2px] flex justify-center items-center " >{{weekday}}</div>
-            }
-          </div>
-        }
-        <div class="mx-[2px]" >
-          <p class="text-text-secondary text-center text-xs font-medium uppercase mb-1">{{ month }}</p>
-          <div class="flex" >
-            @for(week of groupedDays[month];track week){
-              <div>
-                @for(day of week;track day){
-                  <div routerLink="/board" [title]="day!=-1?day.toDateString():''" [ngClass]="day!=-1?' cursor-pointer bg-black/10 rounded-[3px]  dark:bg-white/10 flex justify-center items-center ' :''" class="w-[13px] h-[13px] m-[2px] relative " >
-                    @if(day!=-1){
-                      <p [ngClass]="day>today? 'text-[#808080]': ''" class="text-[5px] text-center" >{{day.getDate()}}</p>
-                      @if(day.getDate()==today.getDate() && day.getMonth()==today.getMonth() && day.getFullYear()==today.getFullYear()){
-                        <span class="absolute w-full h-full bg-primary/10 animate-ping border rounded-full border-primary " ></span>
-                      }
-                    }
-                  </div>
-                }
-              </div>
-            }
-          </div>
-        </div>
+  </div>
+
+  <!-- Heatmap -->
+  <div
+    class="flex justify-between bg-surface-light dark:bg-surface-dark rounded-[2rem] p-6 md:p-8 overflow-x-auto border border-white/5 shadow-inner">
+    @for (month of months; track $index ) {
+    @if($index==0){
+    <div class="mt-[19px]">
+      @for(weekday of weekDays; track weekday){
+      <div class="h-[20px]  text-[10px] m-[2px] flex justify-center items-center ">{{weekday}}</div>
       }
     </div>
-  </section>
+    }
+    <div class="mx-[2px]">
+      <p class="text-text-secondary text-center text-xs font-medium uppercase mb-1">{{ month }}</p>
+      <div class="flex">
+        @for(week of groupedDays()[month];track week){
+        <div>
+          @for(day of week;track day){
+          <div routerLink="/board" [title]="day!=-1?day.toDateString():''"
+            [class]="day!=-1?' cursor-pointer bg-black/10 rounded-[3px]  dark:bg-white/10 flex justify-center items-center ' :''"
+            class=" w-[20px] aspect-square m-[2px] relative ">
+            @if(day!=-1){
+            <p [class]="day>today? 'text-[#808080]': ''" class="text-[10px] text-center">{{day.getDate()}}</p>
+            @if(day.getDate()==today.getDate() && day.getMonth()==today.getMonth() &&
+            day.getFullYear()==today.getFullYear()){
+            <span class="absolute w-full h-full bg-primary/10 animate-ping border rounded-full border-primary "></span>
+            }
+            }
+          </div>
+          }
+        </div>
+        }
+      </div>
+    </div>
+    }
+  </div>
+</section>

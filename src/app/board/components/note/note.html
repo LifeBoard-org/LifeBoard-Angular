@@ -1,15 +1,122 @@
-<div
-    class="bg-[#e2e8f0] dark:bg-[#2A4034] rounded-tr-4xl rounded-bl-4xl rounded-tl-lg rounded-br-lg p-5 shadow-elevation-2 border border-[#366348]/30 w-full h-full overflow-auto scrollbar-slim">
-    <div class="flex items-center gap-2 mb-2 text-[#36e27b] ">
-        <span class="material-symbols-outlined text-[18px] cursor-pointer">lightbulb</span>
-        <span class="text-xs font-bold uppercase tracking-wider text-text-primary"> Idea</span>
-    </div>
-    <p class="text-text-secondary text-auto font-handwriting leading-relaxed cursor-auto">Currently contributing as a Software
-        Developer at SMC Finance, with a focus on MEAN and MERN stack technologies to develop web applications. Holds a
-        Bachelor of Science in Mathematics and Statistics from MDU, completed in 2020. Leveraging technical expertise in
-        web application frameworks, including Angular and React, to deliver effective solutions.
+<div class="note-container flex flex-col w-full h-full rounded overflow-hidden shadow-elevation-1 transition-all duration-300 relative group"
+    [style.backgroundColor]="localContent().color || 'var(--color-note-default)'"
+    [class.is-editing]="localContent().isEditing">
 
-        Experienced in software development with a track record of working in diverse roles, including Full Stack
-        Developer at iTech Mission Pvt. Ltd. and Angular Developer at Almondz. Passionate about creating scalable and
-        efficient web applications, focusing on functionality and user experience to meet organizational goals.</p>
+    <!-- Image Header -->
+    @if (localContent().image) {
+    <div class="relative w-full h-[200px] bg-gray-100 overflow-hidden group/image">
+        <img [src]="localContent().image"
+            class="w-full h-full object-cover transition-transform duration-500 hover:scale-105" alt="Note Attachment">
+        @if (localContent().isEditing) {
+        <button (click)="removeImage()"
+            class="absolute top-2 right-2 bg-black/50 hover:bg-black/70 text-white rounded-full w-8 h-8 flex items-center justify-center opacity-0 group-hover/image:opacity-100 transition-opacity">
+            <span class="material-symbols-outlined text-[18px]">delete</span>
+        </button>
+        }
+    </div>
+    }
+
+    <div class="p-4 flex-1 flex flex-col gap-2 overflow-y-auto scrollbar-slim">
+
+        <!-- Title -->
+        @if (localContent().title || localContent().isEditing || isNoteEmpty()) {
+        <input type="text"
+            class="bg-transparent border-none outline-none text-lg font-bold placeholder:text-text-secondary/60 text-text-primary w-full transition-colors"
+            placeholder="Title" [value]="localContent().title" (input)="updateTitle($event)">
+        }
+
+        <!-- Content Body -->
+        @if (localContent().tasks === undefined) {
+        @if(localContent().content || localContent().isEditing || isNoteEmpty()) {
+        <textarea
+            class="bg-transparent border-none outline-none text-md text-text-secondary resize-none placeholder:text-text-secondary/50 w-full flex-1 transition-colors min-h-[50px] custom-scrollbar"
+            placeholder="Take a note..." [value]="localContent().content" (input)="updateContent($event)"
+            rows="3"></textarea>
+        }
+        }
+
+        <!-- Tasklist -->
+        @if (localContent().tasks) {
+        <div class="flex flex-col gap-1 mt-2">
+            @for (task of localContent().tasks; track task.id; let i = $index) {
+            <div class="flex items-center gap-2 group/task hover:bg-black/5 p-1 rounded-lg transition-colors">
+                <button
+                    class="w-5 h-5 rounded border-2 border-text-secondary/50 flex items-center justify-center hover:border-text-primary transition-colors focus:outline-none"
+                    [class.bg-text-secondary]="task.completed" [class.border-text-secondary]="task.completed"
+                    (click)="toggleTaskCompletion(i)">
+                    @if (task.completed) {
+                    <span class="material-symbols-outlined text-[14px] text-white">check</span>
+                    }
+                </button>
+                <input type="text"
+                    class="bg-transparent border-none outline-none text-md flex-1 placeholder:text-text-secondary/50 text-text-primary"
+                    [class.line-through]="task.completed" [class.text-text-secondary]="task.completed"
+                    [value]="task.text" (input)="updateTaskText(i, $event)">
+
+                <button
+                    class="opacity-0 group-hover/task:opacity-100 text-text-secondary hover:text-red-500 transition-opacity"
+                    (click)="removeTask(i)">
+                    <span class="material-symbols-outlined text-[18px]">close</span>
+                </button>
+            </div>
+            }
+
+            @if (localContent().isEditing) {
+            <div class="flex items-center gap-2 mt-1 p-1">
+                <span class="material-symbols-outlined text-[20px] text-text-secondary/50">add</span>
+                <input type="text"
+                    class="bg-transparent border-none outline-none text-md flex-1 placeholder:text-text-secondary/50 text-text-primary"
+                    placeholder="List item" (keyup.enter)="addTask($event)" (blur)="addTask($event)">
+            </div>
+            }
+        </div>
+        }
+    </div>
+
+    <!-- Edit Toolbar (Bottom) -->
+    @if(localContent().isEditing){
+    <div class="flex items-center justify-between p-2 mt-auto text-text-secondary">
+        <!-- Left Tool Icons -->
+        <div class="flex items-center gap-1">
+            <!-- Color Picker -->
+            <div class="relative">
+                <button (click)="showColors.set(!showColors())"
+                    class="w-8 h-8 rounded-full hover:bg-black/5 flex items-center justify-center transition-colors">
+                    <span class="material-symbols-outlined text-[20px]">palette</span>
+                </button>
+                <!-- Color Palette Dropdown -->
+                @if (showColors()) {
+                <div
+                    class="absolute bottom-full left-0 mb-2 flex flex-wrap w-[150px] bg-surface rounded-xl shadow-elevation-3 p-2 gap-1 z-10 animate-fade-in-up border border-theme">
+                    @for (color of colors; track $index) {
+                    <button class="w-6 h-6 rounded-full border border-black/10 hover:scale-110 transition-transform"
+                        [style.backgroundColor]="color" [class.border-black]="localContent().color === color"
+                        (click)="changeColor(color); showColors.set(false)"></button>
+                    }
+                </div>
+                }
+            </div>
+
+            <!-- Add Image -->
+            <button
+                class="w-8 h-8 rounded-full hover:bg-black/5 flex items-center justify-center transition-colors relative">
+                <span class="material-symbols-outlined text-[20px]">image</span>
+                <input type="file" class="absolute inset-0 opacity-0 cursor-pointer" accept="image/*"
+                    (change)="onImageSelected($event)">
+            </button>
+
+            <!-- Toggle Tasks -->
+            <button class="w-8 h-8 rounded-full hover:bg-black/5 flex items-center justify-center transition-colors"
+                (click)="toggleTasklist()">
+                <span class="material-symbols-outlined text-[20px]">check_box</span>
+            </button>
+        </div>
+
+        <!-- Right Actions -->
+        <button class="px-4 py-1.5 hover:bg-black/5 rounded-lg font-bold text-sm transition-colors text-text-primary"
+            (click)="save()">
+            Close
+        </button>
+    </div>
+    }
 </div>

@@ -1,10 +1,8 @@
-import { Component, computed, HostListener, signal } from "@angular/core";
+import { ChangeDetectionStrategy, Component, computed, HostListener, signal, inject } from "@angular/core";
 import { ThemeService } from "../../core/theme/theme.service";
 import { BoardItem, BoardItemType } from "./board.types";
 import { CdkDragEnd, DragDropModule } from '@angular/cdk/drag-drop';
 import { CommonModule } from "@angular/common";
-import { Image } from "../components/image/image";
-import { Tasklist } from "../components/tasklist/tasklist";
 import { Note } from "../components/note/note";
 import { RouterLink } from "@angular/router";
 
@@ -12,23 +10,22 @@ import { RouterLink } from "@angular/router";
     selector: 'app-board',
     templateUrl: './board.component.html',
     styleUrls: ['./board.component.css'],
-    standalone: true,
-    imports: [DragDropModule, CommonModule,Image,Tasklist,Note,RouterLink]
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    imports: [DragDropModule, CommonModule, Note, RouterLink]
 })
 export class BoardComponent {
 
     darkMode: boolean = true;
 
-    constructor(
-        private themeServices: ThemeService
-    ) {
+    private themeServices = inject(ThemeService);
+    constructor() {
         this.darkMode = this.themeServices.isDarkMode()
     }
 
-    itemTypes:{type:BoardItemType,name:string}[] = [
-        {type:'note',name:'Note'},
-        {type:'task',name:'Task'},
-        {type:'image',name:'Image'},
+    itemTypes: { type: BoardItemType, name: string }[] = [
+        { type: 'note', name: 'Note' },
+        { type: 'task', name: 'Task' },
+        { type: 'image', name: 'Image' },
     ]
 
     panX = signal(0);
@@ -70,10 +67,10 @@ export class BoardComponent {
     // 1. Wheel: Handles Zoom (Ctrl+Wheel) and Pan (Wheel only)
     @HostListener('wheel', ['$event'])
     onWheel(event: WheelEvent) {
-        event.preventDefault();
 
         // SCENARIO 1: ZOOM (Ctrl + Wheel)
         if (event.ctrlKey) {
+            event.preventDefault();
             const zoomIntensity = 0.001; // Sensitivity
             const delta = -event.deltaY;
             const zoomFactor = Math.exp(delta * zoomIntensity);
@@ -98,7 +95,7 @@ export class BoardComponent {
             this.panY.set(mouseY - worldY * nextZoom);
         }
         // SCENARIO 2: PAN (Wheel only - e.g. Trackpad or Mouse Wheel)
-        else if(event.shiftKey) {
+        else if (event.shiftKey) {
             this.panX.update(x => x - event.deltaX);
             this.panY.update(y => y - event.deltaY);
         }
@@ -107,7 +104,7 @@ export class BoardComponent {
     // 2. Mouse Down: Initiates Drag Panning
     onMouseDown(event: MouseEvent) {
         // Allow panning if Space is held OR Middle Mouse Button is clicked
-        if (this.isPanning() || event.button === 1) {
+        if (this.isPanning() && event.button === 0) {
             this.isDragging = true;
             this.startX = event.clientX;
             this.startY = event.clientY;
@@ -119,7 +116,7 @@ export class BoardComponent {
     // 3. Mouse Move: Updates Pan while dragging
     @HostListener('window:mousemove', ['$event'])
     onMouseMove(event: MouseEvent) {
-        if (this.isPanning()) {
+        if (this.isPanning() && event.button === 0) {
             const dx = event.clientX - this.startX;
             const dy = event.clientY - this.startY;
             this.panX.set(this.initialPanX + dx);
@@ -158,22 +155,6 @@ export class BoardComponent {
         this.resizeActiveItem = null;
     }
 
-    // 5. Spacebar Logic: Toggles 'Grab' mode
-    @HostListener('window:keydown.space', ['$event'])
-    onSpaceDown(event: any) {
-        // Prevent page scroll when pressing space
-        // Only trigger if not already pressed (prevents repeat events)
-        event.preventDefault();
-        if (!this.isPanning()) {
-            this.isPanning.set(true);
-        }
-    }
-
-    @HostListener('window:keyup.space')
-    onSpaceUp() {
-        this.isPanning.set(false);
-        this.isDragging = false; // Stop dragging if space is released
-    }
 
     togglePanning() {
         this.isPanning.update(p => !p);
@@ -235,8 +216,19 @@ export class BoardComponent {
 
 
     //Adding items
-    boardItems = signal<BoardItem[]>([]);
-
+    boardItems = signal<BoardItem[]>([
+        // {
+        //     id: 1,
+        //     type: 'note',
+        //     x: 700,
+        //     y: 400,
+        //     width: 200,
+        //     height: 150,
+        //     content: { title: 'New Idea', content: 'New Idea', isEditing: false },
+        //     color: '#fff9c4'
+        // }
+    ]);
+    activeItem = signal<BoardItem | null>(null);
     addItem(type: 'note' | 'task' | 'image') {
         const center = this.getViewportCenterInWorldSpace();
         const newItem: BoardItem = {
@@ -244,12 +236,44 @@ export class BoardComponent {
             type,
             x: center.x,
             y: center.y,
-            width: 200,  // Default Width
-            height: 150, // Default Height
-            content: type === 'note' ? 'New Idea' : 'To Do',
-            color: type === 'note' ? '#fff9c4' : '#e1f5fe'
+            width: 300,  // Slightly wider default
+            height: 200, // Slightly taller default
+            content: { title: '', content: '', isEditing: true, color: 'var(--color-surface)' },
+            color: 'var(--color-surface)'
         };
-        this.boardItems.update(items => [...items, newItem]);
+        this.activeItem.set(newItem);
+        // this.boardItems.update(items => [...items, newItem]);
 
+    }
+    editItem(item: BoardItem) {
+        // Create a deep copy to avoid direct mutation
+        const activeCopy = JSON.parse(JSON.stringify(item));
+        activeCopy.content.isEditing = true;
+        this.activeItem.set(activeCopy);
+    }
+
+    closeModal() {
+        if (this.activeItem() && (this.activeItem()?.content.title || this.activeItem()?.content.content || this.activeItem()?.content.image || this.activeItem()?.content.tasks?.length)) {
+            // Update the Top-Level BoardItem Color based on the inner content color
+            const updatedItem = {
+                ...this.activeItem()!,
+                content: {
+                    ...this.activeItem()!.content,
+                    isEditing: false
+                },
+                color: this.activeItem()!.content.color || 'var(--color-note-default)'
+            };
+
+            this.boardItems.update(items => {
+                const existingIndex = items.findIndex(i => i.id === updatedItem.id);
+                if (existingIndex > -1) {
+                    const newItems = [...items];
+                    newItems[existingIndex] = updatedItem;
+                    return newItems;
+                }
+                return [...items, updatedItem];
+            });
+        }
+        this.activeItem.set(null);
     }
 }

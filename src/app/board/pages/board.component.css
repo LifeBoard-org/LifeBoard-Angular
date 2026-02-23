@@ -5,7 +5,8 @@
   overflow: hidden;
   position: relative;
   background-color: var(--board-surface);
-  touch-action: none; /* Disables browser gestures to handle them manually */
+  touch-action: none;
+  /* Disables browser gestures to handle them manually */
 }
 
 /* The infinite surface that moves and scales */
@@ -13,21 +14,24 @@
   position: absolute;
   top: 0;
   left: 0;
-  width: 0;   /* Width/Height don't matter, it's just an origin point */
+  width: 0;
+  /* Width/Height don't matter, it's just an origin point */
   height: 0;
-  transform-origin: 0 0; 
+  transform-origin: 0 0;
   will-change: transform;
 }
 
 /* The dot pattern background */
 .bg-dot-pattern {
-  width: 100000px; /* Huge area */
+  width: 100000px;
+  /* Huge area */
   height: 100000px;
   /* Center the huge div so (0,0) is in the middle of it */
-  transform: translate(-50000px, -50000px); 
-  
-  background-image: radial-gradient(#959595 1px, transparent 1px);
-  background-size: 24px 24px; /* Grid spacing */
+  transform: translate(-50000px, -50000px);
+
+  background-image: radial-gradient(#95959536 1px, transparent 1px);
+  background-size: 24px 24px;
+  /* Grid spacing */
 }
 
 
@@ -38,26 +42,17 @@
   /* Remove transform:translate(-50%) so drag coordinates are 1:1 with top/left */
   /* If you want to center on creation, handle that in the TS logic */
   border-radius: 8px;
-  cursor: grab;
-  border: 1px solid rgba(0,0,0,0.1);
-  /* Prevent text selection while dragging */
-  user-select: none;
+  border: 1px solid rgba(0, 0, 0, 0.1);
   /* Important for performance */
-  will-change: transform, width, height; 
+  will-change: transform, width, height;
   /* background: white; */
   overflow: hidden;
 }
 
 .board-item:hover {
   box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
-  z-index: 10; /* Bring hovered item to front */
-}
-
-
-.board-item:active {
-  cursor: grabbing;
-  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.2);
-  z-index: 100; /* Bring to front while dragging */
+  z-index: 10;
+  /* Bring hovered item to front */
 }
 
 /* The Resize Handle */
@@ -67,12 +62,13 @@
   right: 0;
   width: 20px;
   height: 20px;
-  cursor: nwse-resize; /* Diagonal resize cursor */
+  cursor: nwse-resize;
+  /* Diagonal resize cursor */
   /* Make a visible corner */
-  background: linear-gradient(135deg, transparent 50%, rgba(0,0,0,0.2) 50%);
+  background: linear-gradient(135deg, transparent 50%, rgba(0, 0, 0, 0.2) 50%);
   z-index: 10;
 }
 
 .resize-handle:hover {
-  background: linear-gradient(135deg, transparent 50%, rgba(0,0,0,0.5) 50%);
+  background: linear-gradient(135deg, transparent 50%, rgba(0, 0, 0, 0.5) 50%);
 }

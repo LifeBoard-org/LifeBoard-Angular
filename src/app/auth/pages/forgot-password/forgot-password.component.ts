@@ -1,9 +1,9 @@
-import { Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { ReactiveFormsModule, FormBuilder, Validators, FormGroup } from '@angular/forms';
 import { RouterLink } from '@angular/router';
 
 @Component({
-  standalone: true,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [ReactiveFormsModule, RouterLink],
   template: `
     <h2 class="text-xl font-semibold text-primary mb-6">
@@ -33,12 +33,13 @@ import { RouterLink } from '@angular/router';
   `
 })
 export class ForgotPasswordComponent {
-    form:FormGroup
-    constructor(private fb: FormBuilder) {
-        this.form = this.fb.group({
-          email: ['', [Validators.required, Validators.email]]
-        });
-    }
+  form: FormGroup
+  private fb = inject(FormBuilder);
+  constructor() {
+    this.form = this.fb.group({
+      email: ['', [Validators.required, Validators.email]]
+    });
+  }
 
 
   reset() {
