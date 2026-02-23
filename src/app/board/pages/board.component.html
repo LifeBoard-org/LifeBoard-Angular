@@ -50,14 +50,21 @@
             [style.left.px]="item.x" [style.top.px]="item.y" [style.width.px]="item.width"
             [style.height.px]="item.height">
             <div class="h-full w-full bg-transparent">
-                <app-note [content]="item.content" (openEdit)="editItem(item)"></app-note>
+                <app-note [content]="item.content"></app-note>
             </div>
 
-            <!-- Absolute drag handle mirroring the note.html edit button positioning -->
+            <!-- Absolute drag and edit handles -->
             @if (!item.content.isEditing) {
-            <div cdkDragHandle
-                class="absolute top-2 right-12 bg-black/10 hover:bg-black/20 dark:bg-white/10 dark:hover:bg-white/20 text-text-primary rounded-full w-8 h-8 flex items-center justify-center opacity-0 group-hover/board:opacity-100 transition-opacity z-10 hidden md:flex cursor-grab active:cursor-grabbing">
-                <span class="material-symbols-outlined text-[18px]">drag_indicator</span>
+            <div
+                class="absolute top-2 right-2 flex items-center gap-2 opacity-0 group-hover/board:opacity-100 transition-opacity z-10 hidden md:flex">
+                <div cdkDragHandle
+                    class="bg-black/10 hover:bg-black/20 dark:bg-white/10 dark:hover:bg-white/20 text-text-primary rounded-full w-8 h-8 flex items-center justify-center cursor-grab active:cursor-grabbing">
+                    <span class="material-symbols-outlined text-[18px]">drag_indicator</span>
+                </div>
+                <button (click)="editItem(item)"
+                    class="bg-black/10 hover:bg-black/20 dark:bg-white/10 dark:hover:bg-white/20 text-text-primary rounded-full w-8 h-8 flex items-center justify-center cursor-pointer">
+                    <span class="material-symbols-outlined text-[18px]">edit</span>
+                </button>
             </div>
             }
 

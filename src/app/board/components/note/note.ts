@@ -13,7 +13,6 @@ import { NoteContent } from '../../pages/board.types';
 export class Note {
   content = input.required<NoteContent>();
   closeModal = output<void>();
-  openEdit = output<void>();
 
   // Use a local signal for managing state internally, especially for edits
   localContent = signal<NoteContent>({ title: '', content: '', isEditing: false, tasks: undefined });
@@ -175,12 +174,6 @@ export class Note {
     this.content().isEditing = false;
     this.syncToParent();
     this.closeModal.emit();
-  }
-
-  triggerEdit() {
-    if (!this.localContent().isEditing) {
-      this.openEdit.emit();
-    }
   }
 
   isNoteEmpty() {

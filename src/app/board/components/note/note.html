@@ -2,14 +2,6 @@
     [style.backgroundColor]="localContent().color || 'var(--color-note-default)'"
     [class.is-editing]="localContent().isEditing">
 
-    <!-- Floating Edit Button For Board Items (Hidden in Edit Modal) -->
-    @if (!localContent().isEditing) {
-    <button (click)="triggerEdit()"
-        class="absolute top-2 right-2 bg-black/10 hover:bg-black/20 dark:bg-white/10 dark:hover:bg-white/20 text-text-primary rounded-full w-8 h-8 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity z-10 hidden md:flex">
-        <span class="material-symbols-outlined text-[18px]">edit</span>
-    </button>
-    }
-
     <!-- Image Header -->
     @if (localContent().image) {
     <div class="relative w-full h-[200px] bg-gray-100 overflow-hidden group/image">
