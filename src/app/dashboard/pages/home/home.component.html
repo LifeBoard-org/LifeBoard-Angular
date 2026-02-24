@@ -1,13 +1,9 @@
-<div class=" w-full p-4 md:p-8 lg:p-20 flex flex-col gap-8 md:gap-12">
+<div class=" w-full p-4 md:p-8 lg:p-15 flex flex-col gap-8 md:gap-12">
 
     <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
 
         <div
-            class="lg:col-span-8 flex flex-col justify-between rounded-[2rem] bg-surface-light dark:bg-surface-dark p-6 md:p-8 relative overflow-hidden group">
-
-            <div
-                class="absolute top-0 right-0 w-64 h-64 bg-primary/5 rounded-full blur-3xl -mr-16 -mt-16 pointer-events-none">
-            </div>
+            class="lg:col-span-8 flex flex-col justify-between rounded-[2rem] bg-surface p-6 md:p-8 relative overflow-hidden group">
             <div class="relative z-10 flex flex-col h-full justify-between gap-8">
                 <div>
                     <h1 class="text-3xl md:text-5xl font-bold text-text-primary mb-2 tracking-tight">Good Morning, {{
@@ -26,7 +22,7 @@
                         <span class="text-sm font-medium text-text-secondary">Focus: {{ focus() }}</span>
                     </div>
                     <button
-                        class="flex items-center gap-2 bg-primary hover:bg-primary/90 text-background-dark px-6 py-3 rounded-full font-bold text-sm transition-transform active:scale-95 shadow-[0_0_20px_rgba(54,226,123,0.2)]">
+                        class="flex items-center gap-2 bg-primary hover:bg-primary/90 text-background-dark px-6 py-3 rounded-full font-bold text-sm transition-transform active:scale-95 cursor-pointer">
                         <span>Open Today's Board</span>
                         <span class="material-symbols-outlined text-lg">arrow_forward</span>
                     </button>
@@ -37,7 +33,7 @@
         <div class="lg:col-span-4 flex flex-col gap-4 ">
             @for (stat of quickStats(); track stat.label) {
             <div
-                class="flex-1 bg-surface-light dark:bg-surface-dark rounded-[2rem] p-6 flex items-center justify-between">
+                class="flex-1 bg-surface rounded-[2rem] p-6 flex items-center justify-between">
                 <div>
                     <p class="text-text-secondary text-sm font-medium mb-1">{{ stat.label }}</p>
                     <div class="flex items-baseline gap-2">
@@ -71,7 +67,7 @@
             <div class="flex gap-4 min-w-max">
                 @for (day of upcomingDays(); track day.date) {
                 <div
-                    class="flex flex-col items-center justify-center w-24 h-32 rounded-[1.5rem] bg-surface-light dark:bg-surface-dark border border-white/5 hover:border-primary/50 transition-all cursor-pointer group">
+                    class="flex flex-col items-center justify-center w-24 h-32 rounded-[1.5rem] bg-surface border border-white/5 hover:border-primary/50 transition-all cursor-pointer group">
                     <span class="text-text-secondary text-xs font-medium uppercase mb-1">{{ day.day }}</span>
                     <span class="text-xl font-bold text-text-secondary mb-2">{{ day.date }}</span>
                     <div class="flex gap-1" [class.opacity-20]="day.tasks.length === 0">

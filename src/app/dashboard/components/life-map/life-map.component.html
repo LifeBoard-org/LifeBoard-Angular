@@ -31,16 +31,16 @@
 
   <!-- Heatmap -->
   <div
-    class="flex justify-between bg-surface-light dark:bg-surface-dark rounded-[2rem] p-6 md:p-8 overflow-x-auto border border-white/5 shadow-inner">
+    class="flex justify-between bg-surface rounded-[2rem] p-6 md:p-8 overflow-x-auto border border-white/5 shadow-inner">
     @for (month of months; track $index ) {
     @if($index==0){
     <div class="mt-[19px]">
       @for(weekday of weekDays; track weekday){
-      <div class="h-[20px]  text-[10px] m-[2px] flex justify-center items-center ">{{weekday}}</div>
+      <div class="h-[16px]  text-[8px] m-[1px] flex justify-center items-center ">{{weekday}}</div>
       }
     </div>
     }
-    <div class="mx-[2px]">
+    <div class="mx-[1px]">
       <p class="text-text-secondary text-center text-xs font-medium uppercase mb-1">{{ month }}</p>
       <div class="flex">
         @for(week of groupedDays()[month];track week){
@@ -48,9 +48,9 @@
           @for(day of week;track day){
           <div routerLink="/board" [title]="day!=-1?day.toDateString():''"
             [class]="day!=-1?' cursor-pointer bg-black/10 rounded-[3px]  dark:bg-white/10 flex justify-center items-center ' :''"
-            class=" w-[20px] aspect-square m-[2px] relative ">
+            class=" w-[16px] aspect-square m-[1px] relative ">
             @if(day!=-1){
-            <p [class]="day>today? 'text-[#808080]': ''" class="text-[10px] text-center">{{day.getDate()}}</p>
+            <p [class]="day>today? 'text-[#808080]': ''" class="text-[8px] text-center">{{day.getDate()}}</p>
             @if(day.getDate()==today.getDate() && day.getMonth()==today.getMonth() &&
             day.getFullYear()==today.getFullYear()){
             <span class="absolute w-full h-full bg-primary/10 animate-ping border rounded-full border-primary "></span>

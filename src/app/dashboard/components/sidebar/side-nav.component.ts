@@ -14,7 +14,7 @@ export class SideNavComponent {
   readonly navItems: NavItem[] = [
     { label: 'Home', icon: 'home', route: '/app' },
     { label: 'Boards', icon: 'dashboard', route: '/app/boards' },
-    { label: 'Profile', icon: 'person', route: '/app/profile' },
+    { label: 'Calendar', icon: 'calendar_month', route: '/app/profile' },
     { label: 'Settings', icon: 'settings', route: '/app/settings' }
   ];
 
@@ -23,6 +23,10 @@ export class SideNavComponent {
 
   navigate(route: string): void {
     this.router.navigateByUrl(route);
+  }
+
+  get getMode(){
+    return this.themeServices.isDarkMode()
   }
 
   isActive(route: string): boolean {

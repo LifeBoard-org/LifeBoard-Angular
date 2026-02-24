@@ -49,16 +49,16 @@
 /* Light Theme */
 :root {
   --primary: #2bee75;
-  --primary-hover: #1fcc62;
+  --primary-hover: #bfbfbf;
 
-  --bg-light: #f6f8f7;
-  --bg-dark: #102217;
+  --bg-light: #ffffff;
+  --bg-dark: #000000eb;
 
   --surface-light: #ffffff;
   --surface-dark: #1a2c22;
 
-  --surface: #ffffff;
-  --surface-variant: #f5f7fa;
+  --surface: #f2f3f5;
+  --surface-variant: #bbe7b6;
 
   --text-primary: #111827;
   --text-secondary: #4b5563;
@@ -88,16 +88,16 @@
 /* Dark Theme */
 .dark {
   --primary: #2bee75;
-  --primary-hover: #1fcc62;
+  --primary-hover: #434343;
 
-  --bg-light: #f6f8f7;
-  --bg-dark: #102217;
+  --bg-light: #ffffff;
+  --bg-dark: #000000eb;
 
   --surface-light: #ffffff;
   --surface-dark: #1a2c22;
 
-  --surface: #111827;
-  --surface-variant: #1f2937;
+  --surface: #1f1f1feb;
+  --surface-variant: #131c0f;
 
   --text-primary: #f3f4f6;
   --text-secondary: #9ca3af;
