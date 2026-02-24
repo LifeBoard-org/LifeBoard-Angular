@@ -58,6 +58,22 @@ The application uses lazy-loading for its main features:
 - [ ] Expanding Board feature interactions (connections, grouping, zooming to objects).
 - [ ] Adding more Dashboard widgets.
 
-## Current Plan: Google Keep Style Note Board Item (Completed)
-- Completed the integration of Google Keep style responsive note board items. Notes now natively support local Material Design color palettes, nested checkmark lists with toggle functionality, image fetching from a FileReader, and rich animated text editors.
-- Modal functionality allows pop-ups anchored to the dynamic background color. Added specific CSS easing animations to enhance Material 3 expressive principles.
+## Current Plan: Mobile & Touch Screen Responsiveness (Board Component)
+
+### Phase 1: Touch Events for Panning & Zooming
+- Map standard `HostListener` mouse events to their mobile equivalents (`touchstart`, `touchmove`, `touchend`).
+- Implement pinch-to-zoom functionality by calculating the distance between two touches on `touchmove` events.
+- Maintain smooth UX by mapping a single touch to "pan" functionality without needing a dedicated pan-mode toggle, or using a two-finger swipe while a single finger interacts with objects.
+
+### Phase 2: Mobile UI Element Adaptations
+- **Note Items Tools Toolbar**: Remove the Tailwind `hidden md:flex` classes from the drag and edit icons layout (`board.component.html`) so touch gestures can actually interact with the handles. Show these controls when the user taps once (selecting the item), or just display them proactively on mobile.
+- **Floating Action Button (FAB)**: Update the "Add Item" button layout for mobile devices using responsive styling to condense it into a circular FAB, saving screen real estate.
+- **Board Metrics Window**: Hide or minimize the debug zoom/coordinate overlay on smaller screens (`max-width: 768px`) to remove visual clutter.
+
+### Phase 3: Resize and Drag Handling for Mobile
+- Add `touchstart`, `touchmove`, `touchend` event handlers to the `.resize-handle` div to ensure users can resize notes using touch natively.
+- Make sure that Angular CDK `cdkDrag` works cleanly with mobile browser behaviours by ensuring `.viewport` retains `touch-action: none`.
+
+### Phase 4: Verification and Polish
+- Ensure the application doesn't accidentally trigger browser "pull-to-refresh" or local zooming text inputs.
+- Test drag capabilities across variable device form-factors by mimicking device dimensions in dev tools.

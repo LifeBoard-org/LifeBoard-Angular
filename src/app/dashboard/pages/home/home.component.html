@@ -32,8 +32,7 @@
 
         <div class="lg:col-span-4 flex flex-col gap-4 ">
             @for (stat of quickStats(); track stat.label) {
-            <div
-                class="flex-1 bg-surface rounded-[2rem] p-6 flex items-center justify-between">
+            <div class="flex-1 bg-surface rounded-[2rem] p-6 flex items-center justify-between">
                 <div>
                     <p class="text-text-secondary text-sm font-medium mb-1">{{ stat.label }}</p>
                     <div class="flex items-baseline gap-2">
@@ -55,35 +54,16 @@
         </div>
     </div>
 
-    <section>
-        <div class="flex items-center justify-between mb-4 px-2">
-            <h2 class="text-xl font-bold text-text-secondary tracking-tight">The Week Ahead</h2>
-            <button
-                class="text-text-secondary hover:text-white text-sm font-medium flex items-center gap-1 transition-colors">
-                View Calendar <span class="material-symbols-outlined text-sm">chevron_right</span>
-            </button>
-        </div>
-        <div class="overflow-x-auto hide-scrollbar pb-4 -mx-4 px-4 md:mx-0 md:px-0">
-            <div class="flex gap-4 min-w-max">
-                @for (day of upcomingDays(); track day.date) {
-                <div
-                    class="flex flex-col items-center justify-center w-24 h-32 rounded-[1.5rem] bg-surface border border-white/5 hover:border-primary/50 transition-all cursor-pointer group">
-                    <span class="text-text-secondary text-xs font-medium uppercase mb-1">{{ day.day }}</span>
-                    <span class="text-xl font-bold text-text-secondary mb-2">{{ day.date }}</span>
-                    <div class="flex gap-1" [class.opacity-20]="day.tasks.length === 0">
-                        @if (day.tasks.length > 0) {
-                        @for (task of day.tasks; track $index) {
-                        <div class="size-1.5 rounded-full" [class]="task.color"></div>
-                        }
-                        } @else {
-                        <div class="size-1.5 rounded-full bg-white"></div>
-                        }
-                    </div>
-                </div>
-                }
-            </div>
-        </div>
-    </section>
+
+    <div class="flex items-center justify-between mb-4 px-2">
+        <h2 class="text-xl font-bold text-text-secondary tracking-tight">The Week Ahead</h2>
+        <button
+            class="text-text-secondary hover:text-white text-sm font-medium flex items-center gap-1 transition-colors">
+            View Calendar <span class="material-symbols-outlined text-sm">chevron_right</span>
+        </button>
+    </div>
+
+    <app-week-view></app-week-view>
 
     <app-life-map></app-life-map>
 

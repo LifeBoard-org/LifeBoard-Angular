@@ -2,12 +2,13 @@
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { Router } from '@angular/router';
 import { NavItem } from '../../../core/models/nav-item.model';
-import { ThemeService } from '../../../core/theme/theme.service';
+import { ToggleTheme } from "../../../core/theme/toggle-theme/toggle-theme";
 
 @Component({
   selector: 'lb-side-nav',
   templateUrl: './side-nav.component.html',
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  imports: [ToggleTheme]
 })
 export class SideNavComponent {
 
@@ -19,20 +20,13 @@ export class SideNavComponent {
   ];
 
   private router = inject(Router);
-  private themeServices = inject(ThemeService);
 
   navigate(route: string): void {
     this.router.navigateByUrl(route);
   }
 
-  get getMode(){
-    return this.themeServices.isDarkMode()
-  }
-
   isActive(route: string): boolean {
     return this.router.url === route;
   }
-  toggle() {
-    this.themeServices.toggle()
-  }
+
 }
