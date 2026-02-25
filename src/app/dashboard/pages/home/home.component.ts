@@ -2,6 +2,7 @@ import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
 import { CommonModule, DatePipe } from '@angular/common';
 import { LifeMapComponent } from '../../components/life-map/life-map.component';
 import { WeekView } from '../../components/week-view/week-view';
+import { RouterLink } from '@angular/router';
 
 interface Stat {
   label: string;
@@ -23,14 +24,14 @@ interface HeatmapCell {
 
 @Component({
   selector: 'app-home',
-  imports: [CommonModule, DatePipe, LifeMapComponent, WeekView],
+  imports: [CommonModule, DatePipe, LifeMapComponent, WeekView,RouterLink],
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.css'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 
 export class HomeComponent {
-  readonly userName = signal('Alex');
+  readonly userName = signal('Himanshu');
   readonly currentDate = signal(new Date());
   readonly focus = signal('Deep Work & Health');
 

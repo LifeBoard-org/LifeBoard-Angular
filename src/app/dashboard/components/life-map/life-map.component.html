@@ -57,8 +57,8 @@
             <div [routerLink]="day != -1 ? ['/board'] : null"
               [queryParams]="day != -1 ? { date: day.toISOString() } : null"
               [title]="day != -1 ? day.toDateString() : ''"
-              [class]="day != -1 ? 'cursor-pointer bg-black/10 rounded-[3px] dark:bg-white/10 flex justify-center items-center' : ''"
-              class="w-full aspect-square relative min-w-[12px] max-w-[24px] mx-auto">
+              [class]="day != -1 ? 'cursor-pointer bg-black/10 rounded-[3px] dark:bg-white/10 flex justify-center items-center hover:border  border-primary/50 transition-all active:scale-95' : ''"
+              class="w-full aspect-square relative min-w-[12px] max-w-[24px] mx-auto ">
               @if(day != -1) {
               <p [class]="day > today ? 'text-[#808080]' : ''"
                 class="text-[6px] sm:text-[8px] text-center leading-none">

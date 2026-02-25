@@ -22,6 +22,8 @@
                         <span class="text-sm font-medium text-text-secondary">Focus: {{ focus() }}</span>
                     </div>
                     <button
+                        [routerLink]="['/board']"
+                        [queryParams]="{ date: currentDate().toISOString() }"
                         class="flex items-center gap-2 bg-primary hover:bg-primary/90 text-background-dark px-6 py-3 rounded-full font-bold text-sm transition-transform active:scale-95 cursor-pointer">
                         <span>Open Today's Board</span>
                         <span class="material-symbols-outlined text-lg">arrow_forward</span>
@@ -54,20 +56,18 @@
         </div>
     </div>
 
+    <div>
 
-    <div class="flex items-center justify-between mb-4 px-2">
-        <h2 class="text-xl font-bold text-text-secondary tracking-tight">The Week Ahead</h2>
-        <button
-            class="text-text-secondary hover:text-white text-sm font-medium flex items-center gap-1 transition-colors">
-            View Calendar <span class="material-symbols-outlined text-sm">chevron_right</span>
-        </button>
+        <div class="flex items-center justify-between mb-4 px-2">
+            <h2 class="text-xl font-bold text-text-secondary tracking-tight">The Week Ahead</h2>
+            <button
+                class="text-text-secondary hover:text-white text-sm font-medium flex items-center gap-1 transition-colors">
+                View Calendar <span class="material-symbols-outlined text-sm">chevron_right</span>
+            </button>
+        </div>
+        <app-week-view></app-week-view>
     </div>
 
-    <app-week-view></app-week-view>
 
     <app-life-map></app-life-map>
-
-    <div class="flex justify-center pb-8 pt-4">
-        <p class="text-text-secondary text-sm">LifeBoard © 2023</p>
-    </div>
 </div>
