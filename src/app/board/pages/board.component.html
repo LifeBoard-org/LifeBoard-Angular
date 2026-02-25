@@ -1,47 +1,7 @@
-<header class="board-surface fixed w-full z-50 px-6 py-4 flex justify-center items-start pointer-events-none">
-    <div
-        class="pointer-events-auto  backdrop-blur-md border border-[#254632] rounded-full px-4 py-2 flex items-center justify-between shadow-elevation-2 w-full max-w-[900px] gap-4 transition-all ">
-        <!-- Left: Back Action -->
-        <button routerLink="/dashboard" aria-label="Back to Heatmap"
-            class="flex items-center justify-center w-10 h-10 rounded-full hover:bg-[#254632] text-secondary transition-colors group">
-            <span class="material-symbols-outlined group-hover:-translate-x-0.5 transition-transform">arrow_back</span>
-        </button>
-        <!-- Center: Navigation & Date -->
-        <div class="flex items-center gap-2">
-            <button
-                class="flex items-center justify-center w-10 h-10 rounded-full hover:bg-[#254632] text-secondary/70 hover:text-secondary transition-colors">
-                <span class="material-symbols-outlined">chevron_left</span>
-            </button>
-            <button
-                class="flex items-center gap-2 px-4 h-10 rounded-full hover:bg-[#254632] text-secondary transition-colors group">
-                <span class="material-symbols-outlined text-primary text-[20px] filled">calendar_today</span>
-                <span class="text-base font-bold tracking-tight">Oct 24, 2023</span>
-                <span
-                    class="material-symbols-outlined text-[18px] text-secondary/50 group-hover:text-secondary transition-colors">arrow_drop_down</span>
-            </button>
-            <button
-                class="flex items-center justify-center w-10 h-10 rounded-full hover:bg-[#254632] text-secondary/70 hover:text-secondary transition-colors">
-                <span class="material-symbols-outlined">chevron_right</span>
-            </button>
-        </div>
-        <!-- Right: Actions -->
-        <div class="flex items-center gap-1">
-            <button
-                class="flex items-center justify-center w-10 h-10 rounded-full hover:bg-[#254632] text-secondary transition-colors"
-                title="More options">
-                <span class="material-symbols-outlined">more_vert</span>
-            </button>
-            <div class="w-px-1 h-6 bg-[#254632] mx-1"></div>
-            <span (click)="toggleTheme()"
-                class="material-symbols-outlined text-[24px] cursor-pointer">{{darkMode?'dark_mode':'light_mode'}}</span>
-            <div class="w-1-px h-6 bg-[#254632] mx-1"></div>
-            <span (click)="togglePanning()"
-                class="material-symbols-outlined text-[24px] cursor-pointer">{{isPanning()?'pan_tool_alt':'pan_tool'}}</span>
-        </div>
-    </div>
-</header>
-<div class="viewport " (mousedown)="onMouseDown($event)" (contextmenu)="$event.preventDefault()"
-    [style.cursor]="cursorStyle()">
+<app-board-header [(boardDate)]="boardDate" [isPanning]="isPanning()"
+    (togglePanning)="togglePanning()"></app-board-header>
+<div class="viewport " (mousedown)="onMouseDown($event)" (touchstart)="onTouchStart($event)"
+    (contextmenu)="$event.preventDefault()" [style.cursor]="cursorStyle()">
     <div class="canvas-surface" [style.transform]="surfaceTransform()">
         <div class="bg-dot-pattern"></div>
         @for (item of boardItems(); track item.id) {
@@ -56,7 +16,7 @@
             <!-- Absolute drag and edit handles -->
             @if (!item.content.isEditing) {
             <div
-                class="absolute top-2 right-2 flex items-center gap-2 opacity-0 group-hover/board:opacity-100 transition-opacity z-10 hidden md:flex">
+                class="absolute top-2 right-2 flex items-center gap-2 opacity-100 md:opacity-0 group-hover/board:opacity-100 transition-opacity z-10 flex">
                 <div cdkDragHandle
                     class="bg-black/10 hover:bg-black/20 dark:bg-white/10 dark:hover:bg-white/20 text-text-primary rounded-full w-8 h-8 flex items-center justify-center cursor-grab active:cursor-grabbing">
                     <span class="material-symbols-outlined text-[18px]">drag_indicator</span>
@@ -68,12 +28,14 @@
             </div>
             }
 
-            <div class="resize-handle" (mousedown)="startResizing($event, item)"></div>
+            <div class="resize-handle p-4" (mousedown)="startResizing($event, item)"
+                (touchstart)="startResizingTouch($event, item)"></div>
         </div>
         }
     </div>
 
-    <div class="fixed bottom-4 left-4 bg-surface p-3 rounded shadow pointer-events-none text-xs font-mono">
+    <div
+        class="fixed bottom-4 left-4 bg-surface p-3 rounded shadow pointer-events-none text-xs font-mono hidden md:block">
         Zoom: {{ zoom().toFixed(2) }}<br>
         X: {{ panX().toFixed(0) }}<br>
         Y: {{ panY().toFixed(0) }}
@@ -87,11 +49,11 @@
             }
         </div> -->
         <button (click)="addItem('note')"
-            class="flex items-center gap-3 bg-primary text-[#122118] h-12 pl-5 pr-7 rounded-2xl shadow-elevation-3 hover:brightness-110 active:scale-95 transition-all duration-300 group">
+            class="flex items-center justify-center gap-3 bg-primary text-[#122118] h-12 w-12 md:w-auto md:pl-5 md:pr-7 rounded-full md:rounded-2xl shadow-elevation-3 hover:brightness-110 active:scale-95 transition-all duration-300 group">
 
             <span
                 class="material-symbols-outlined text-[28px] transition-transform duration-300 group-hover:rotate-90">add</span>
-            <span class="text-base font-bold tracking-wide">Add Item</span>
+            <span class="text-base font-bold tracking-wide hidden md:block">Add Item</span>
         </button>
     </div>
 </div>

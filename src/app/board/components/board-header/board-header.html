@@ -1,0 +1,50 @@
+<header class=" fixed top-7 flex items-center justify-center w-screen z-20 pointer-events-none">
+    <!-- Left: Back Action -->
+    <div class="pointer-events-auto flex items-center gap-2 h-full px-2 py-2 bg-surface rounded-[16px]">
+        <div routerLink="/dashboard"
+            class="active:scale-85 active:mx-[0.5px]  transition-all group cursor-pointer hover:bg-primary-hover  flex items-center justify-center p-2 rounded-[10px]">
+            <span class="material-symbols-outlined text-text-secondary group-hover:text-text-primary">
+                arrow_back
+            </span>
+        </div>
+    </div>
+    <!-- Center: Navigation & Date -->
+    <div class="pointer-events-auto flex items-center gap-2 h-full px-2 py-2 bg-surface rounded-[16px] relative">
+        <div (click)="prevDay()"
+            class="active:scale-85 active:mx-[0.5px]  transition-all group cursor-pointer hover:bg-primary-hover  flex items-center justify-center p-2 rounded-[10px]">
+            <span class="material-symbols-outlined text-text-secondary group-hover:text-text-primary">
+                chevron_left
+            </span>
+        </div>
+        <button (click)="toggleWeekView()"
+            class="cursor-pointer active:scale-85 active:mx-[0.5px]  transition-all group hover:bg-[#254632]  flex items-center gap-2 px-4 h-10 rounded-[10px]  text-secondary  group">
+            <span class="material-symbols-outlined text-primary text-[20px] filled">calendar_today</span>
+            <span class="text-base font-bold tracking-tight">{{ boardDate() | date:'mediumDate' }}</span>
+            <span
+                class="material-symbols-outlined text-[18px] text-secondary/50 group-hover:text-secondary transition-colors">arrow_drop_down</span>
+        </button>
+        <div (click)="nextDay()"
+            class="active:scale-85 active:mx-[0.5px]  transition-all group cursor-pointer hover:bg-primary-hover  flex items-center justify-center p-2 rounded-[10px]">
+            <span class="material-symbols-outlined text-text-secondary group-hover:text-text-primary">
+                chevron_right
+            </span>
+        </div>
+        <div [class.max-h-[300px]]="showWeekView()" [class.opacity-100]="showWeekView()"
+            [class.max-h-0]="!showWeekView()" [class.opacity-0]="!showWeekView()" (click)="toggleWeekView()"
+            class="absolute top-full left-1/2 -translate-x-1/2 mt-2 overflow-hidden transition-all duration-700 ease-in-out">
+            <app-week-view></app-week-view>
+        </div>
+    </div>
+    <!-- Right: Actions -->
+    <div class="pointer-events-auto flex items-center gap-2 h-full px-2 py-2 bg-surface rounded-[16px]">
+        <app-toggle-theme></app-toggle-theme>
+    </div>
+    <div class="pointer-events-auto flex items-center gap-2 h-full px-2 py-2 bg-surface rounded-[16px]">
+        <div (click)="togglePanning.emit()"
+            class="active:scale-85 active:mx-[0.5px]  transition-all group cursor-pointer hover:bg-primary-hover  flex items-center justify-center p-2 rounded-[10px]">
+            <span class="material-symbols-outlined text-text-secondary group-hover:text-text-primary">
+                {{isPanning()?'pan_tool_alt':'pan_tool'}}
+            </span>
+        </div>
+    </div>
+</header>

@@ -1,25 +1,38 @@
-import { ChangeDetectionStrategy, Component, computed, HostListener, signal, inject } from "@angular/core";
+import { ChangeDetectionStrategy, Component, computed, HostListener, signal, inject, OnInit } from "@angular/core";
 import { ThemeService } from "../../core/theme/theme.service";
 import { BoardItem, BoardItemType } from "./board.types";
 import { CdkDragEnd, DragDropModule } from '@angular/cdk/drag-drop';
 import { CommonModule } from "@angular/common";
 import { Note } from "../components/note/note";
-import { RouterLink } from "@angular/router";
+import { ActivatedRoute, RouterLink } from "@angular/router";
+import { ToggleTheme } from "../../core/theme/toggle-theme/toggle-theme";
+import { BoardHeader } from "../components/board-header/board-header";
 
 @Component({
     selector: 'app-board',
     templateUrl: './board.component.html',
     styleUrls: ['./board.component.css'],
     changeDetection: ChangeDetectionStrategy.OnPush,
-    imports: [DragDropModule, CommonModule, Note, RouterLink]
+    imports: [DragDropModule, CommonModule, Note, BoardHeader]
 })
-export class BoardComponent {
+export class BoardComponent implements OnInit {
 
     darkMode: boolean = true;
+    boardDate = signal<Date>(new Date());
 
     private themeServices = inject(ThemeService);
+    private route = inject(ActivatedRoute);
+
     constructor() {
         this.darkMode = this.themeServices.isDarkMode()
+    }
+
+    ngOnInit() {
+        this.route.queryParams.subscribe(params => {
+            if (params['date']) {
+                this.boardDate.set(new Date(params['date']));
+            }
+        });
     }
 
     itemTypes: { type: BoardItemType, name: string }[] = [
@@ -34,7 +47,7 @@ export class BoardComponent {
 
     isPanning = signal(false);
     // Track if user is actively dragging the mouse
-    isDragging = false;
+    isDragging = signal(false);
     isResizingItem = false;
 
     // Resize temporary state
@@ -51,16 +64,20 @@ export class BoardComponent {
 
     // Dynamic cursor based on state
     cursorStyle = computed(() => {
-        if (this.isDragging) return 'grabbing';
+        if (this.isDragging()) return 'grabbing';
         if (this.isPanning()) return 'grab';
         return 'default';
     });
 
-    // --- Mouse Event State ---
+    // --- Mouse & Touch Event State ---
     private startX = 0;
     private startY = 0;
     private initialPanX = 0;
     private initialPanY = 0;
+
+    // --- Touch Specific State ---
+    private initialTouchDistance = 0;
+    private initialZoom = 1;
 
     // --- Event Handlers ---
 
@@ -105,7 +122,7 @@ export class BoardComponent {
     onMouseDown(event: MouseEvent) {
         // Allow panning if Space is held OR Middle Mouse Button is clicked
         if (this.isPanning() && event.button === 0) {
-            this.isDragging = true;
+            this.isDragging.set(true);
             this.startX = event.clientX;
             this.startY = event.clientY;
             this.initialPanX = this.panX();
@@ -116,7 +133,7 @@ export class BoardComponent {
     // 3. Mouse Move: Updates Pan while dragging
     @HostListener('window:mousemove', ['$event'])
     onMouseMove(event: MouseEvent) {
-        if (this.isPanning() && event.button === 0) {
+        if (this.isPanning() && this.isDragging()) {
             const dx = event.clientX - this.startX;
             const dy = event.clientY - this.startY;
             this.panX.set(this.initialPanX + dx);
@@ -150,7 +167,100 @@ export class BoardComponent {
     // 4. Mouse Up: Stops Dragging
     @HostListener('window:mouseup')
     onMouseUp() {
-        this.isDragging = false;
+        this.isDragging.set(false);
+        this.isResizingItem = false;
+        this.resizeActiveItem = null;
+    }
+
+    // --- Touch Event Handlers ---
+
+    private getTouchDistance(touches: TouchList): number {
+        const dx = touches[0].clientX - touches[1].clientX;
+        const dy = touches[0].clientY - touches[1].clientY;
+        return Math.sqrt(dx * dx + dy * dy);
+    }
+
+    onTouchStart(event: TouchEvent) {
+        if (event.touches.length === 2) {
+            // Start pinch to zoom
+            this.initialTouchDistance = this.getTouchDistance(event.touches);
+            this.initialZoom = this.zoom();
+            this.initialPanX = this.panX();
+            this.initialPanY = this.panY();
+        } else if (event.touches.length === 1) {
+            const target = event.target as HTMLElement;
+            // Pan if hitting explicitly the background, or if pan mode is toggled on.
+            const isBackground = target.classList.contains('viewport') ||
+                target.classList.contains('canvas-surface') ||
+                target.classList.contains('bg-dot-pattern');
+
+            if (this.isPanning() || isBackground) {
+                this.isDragging.set(true);
+                this.startX = event.touches[0].clientX;
+                this.startY = event.touches[0].clientY;
+                this.initialPanX = this.panX();
+                this.initialPanY = this.panY();
+            }
+        }
+    }
+
+    @HostListener('window:touchmove', ['$event'])
+    onTouchMove(event: TouchEvent) {
+        if (event.touches.length === 2) {
+            // Handle pinch to zoom
+            if (event.cancelable) event.preventDefault();
+
+            const currentDistance = this.getTouchDistance(event.touches);
+            const zoomFactor = currentDistance / this.initialTouchDistance;
+
+            const nextZoom = Math.min(Math.max(this.initialZoom * zoomFactor, 0.1), 5);
+
+            // Calculate center of pinch for zoom origin
+            const centerX = (event.touches[0].clientX + event.touches[1].clientX) / 2;
+            const centerY = (event.touches[0].clientY + event.touches[1].clientY) / 2;
+
+            const worldX = (centerX - this.initialPanX) / this.initialZoom;
+            const worldY = (centerY - this.initialPanY) / this.initialZoom;
+
+            this.zoom.set(nextZoom);
+
+            this.panX.set(centerX - worldX * nextZoom);
+            this.panY.set(centerY - worldY * nextZoom);
+
+        } else if (event.touches.length === 1) {
+            // Handle Touch Panning
+            if (this.isDragging() && !this.isResizingItem) {
+                const dx = event.touches[0].clientX - this.startX;
+                const dy = event.touches[0].clientY - this.startY;
+                this.panX.set(this.initialPanX + dx);
+                this.panY.set(this.initialPanY + dy);
+            }
+            // Handle Item Resizing (Phase 3 touch drag, preparing here)
+            else if (this.isResizingItem && this.resizeActiveItem) {
+                const dx = event.touches[0].clientX - this.startX;
+                const dy = event.touches[0].clientY - this.startY;
+
+                const worldDx = dx / this.zoom();
+                const worldDy = dy / this.zoom();
+
+                this.boardItems.update(items => items.map(i => {
+                    if (i.id === this.resizeActiveItem!.id) {
+                        return {
+                            ...i,
+                            width: Math.max(100, this.resizeStartWidth + worldDx),
+                            height: Math.max(80, this.resizeStartHeight + worldDy)
+                        };
+                    }
+                    return i;
+                }));
+            }
+        }
+    }
+
+    @HostListener('window:touchend')
+    @HostListener('window:touchcancel')
+    onTouchEnd() {
+        this.isDragging.set(false);
         this.isResizingItem = false;
         this.resizeActiveItem = null;
     }
@@ -206,6 +316,18 @@ export class BoardComponent {
         this.resizeStartHeight = item.height;
     }
 
+    startResizingTouch(event: TouchEvent, item: BoardItem) {
+        if (event.cancelable) event.preventDefault();
+        event.stopPropagation(); // Stop the drag from triggering
+
+        this.isResizingItem = true;
+        this.resizeActiveItem = item;
+        this.startX = event.touches[0].clientX;
+        this.startY = event.touches[0].clientY;
+        this.resizeStartWidth = item.width;
+        this.resizeStartHeight = item.height;
+    }
+
     trackById(index: number, item: BoardItem) {
         return item.id;
     }
@@ -230,6 +352,8 @@ export class BoardComponent {
     ]);
     activeItem = signal<BoardItem | null>(null);
     addItem(type: 'note' | 'task' | 'image') {
+        console.log(this.boardItems);
+
         const center = this.getViewportCenterInWorldSpace();
         const newItem: BoardItem = {
             id: Date.now(),
