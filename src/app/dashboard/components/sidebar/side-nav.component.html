@@ -25,3 +25,31 @@
     </div>
   </div>
 </aside>
+
+<!-- ---mobile-nav----- -->
+<div class="flex md:hidden fixed bottom-0 left-0 w-full items-center justify-center  z-20 ">
+  <!-- Logo -->
+  <!-- <div class="flex items-center p-4 bg-surface rounded-[20px] ">
+    <span class="material-symbols-outlined cursor-pointer text-primary ">dashboard_customize</span>
+  </div> -->
+  <!-- Navigation -->
+  <nav class="flex items-center gap-2  px-2 py-2 bg-surface rounded-[16px] my-1 ">
+    @for( item of navItems;track item.label){
+    <div
+      class="active:scale-85 active:my-[0.5px] transition-all group cursor-pointer hover:bg-primary-hover  flex items-center justify-center w-full p-2 rounded-[10px]">
+      <span class="material-symbols-outlined text-text-secondary group-hover:text-text-primary">{{ item.icon }}</span>
+    </div>
+    }
+  </nav>
+
+
+  <div class="flex items-center gap-2  px-2 py-2 bg-surface rounded-[16px]">
+    <app-toggle-theme></app-toggle-theme>
+    <div
+      class="active:scale-85 active:my-[0.5px] active:rotate-90  transition-all group cursor-pointer hover:bg-primary-hover  flex items-center justify-center w-full p-2 rounded-[10px]">
+      <span class="material-symbols-outlined text-text-secondary group-hover:text-text-primary">
+        person
+      </span>
+    </div>
+  </div>
+</div>
