@@ -10,7 +10,8 @@
             [style.left.px]="item.x" [style.top.px]="item.y" [style.width.px]="item.width"
             [style.height.px]="item.height">
             <div class="h-full w-full bg-transparent">
-                <app-note [content]="item.content"></app-note>
+                <app-note [content]="item.content" [dateRangeType]="item.dateRangeType || 'day'"
+                    (dateRangeTypeChange)="updateItemDateRange(item, $event)"></app-note>
             </div>
 
             <!-- Absolute drag and edit handles -->
@@ -61,7 +62,8 @@
 <div
     class="w-screen h-screen bg-black/50 backdrop-blur-sm fixed top-0 left-0 z-50 flex items-center justify-center animate-fade-in">
     <div class="w-[600px] h-[400px]">
-        <app-note [content]="activeItem()!.content" (closeModal)="closeModal()"></app-note>
+        <app-note [content]="activeItem()!.content" [dateRangeType]="activeItem()!.dateRangeType || 'day'"
+            (dateRangeTypeChange)="updateActiveItemDateRange($event)" (closeModal)="closeModal()"></app-note>
     </div>
 </div>
 }

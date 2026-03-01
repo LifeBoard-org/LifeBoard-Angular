@@ -1,5 +1,6 @@
-import { ChangeDetectionStrategy, Component, OnInit, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, inject } from '@angular/core';
 import { RouterLink } from '@angular/router';
+import { BoardStateService } from '../../../core/services/board-state.service';
 
 @Component({
   selector: 'app-week-view',
@@ -8,30 +9,31 @@ import { RouterLink } from '@angular/router';
   templateUrl: './week-view.html',
   styleUrl: './week-view.css',
 })
-export class WeekView implements OnInit {
+export class WeekView {
+
+  private boardStateService = inject(BoardStateService);
 
 
-  ngOnInit(): void {
-    this.generateUpcomingDays();
-  }
+  private today = new Date();
 
-  generateUpcomingDays() {
-    const today = new Date();
-    const days = [];
+  upcomingDays = computed<UpcomingDay[]>(() => {
+    const days: UpcomingDay[] = [];
     for (let i = 0; i < 7; i++) {
-      const date = new Date(today);
-      date.setDate(today.getDate() + i);
+      const date = new Date(this.today);
+      date.setDate(this.today.getDate() + i);
+
+      const localDateStr = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}`;
+      const colors = this.boardStateService.getUniqueItemColorsForDate(localDateStr);
+
       days.push({
         day: date.toLocaleDateString('en-US', { weekday: 'short' }),
         date: date.getDate(),
         fullDate: date,
-        tasks: []
+        tasks: colors.map((c: string) => ({ color: c }))
       });
     }
-    this.upcomingDays.set(days);
-  }
-
-  upcomingDays = signal<UpcomingDay[]>([]);
+    return days;
+  });
 
 }
 

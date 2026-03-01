@@ -78,9 +78,31 @@
     <div class="flex items-center justify-between p-2 mt-auto text-text-secondary">
         <!-- Left Tool Icons -->
         <div class="flex items-center gap-1">
+            <!-- Date Range Picker -->
+            <div class="relative">
+                <button (click)="showDateRange.set(!showDateRange()); showColors.set(false)"
+                    class="h-8 px-2 rounded-lg hover:bg-black/5 flex items-center justify-center transition-colors text-xs font-medium uppercase min-w-[60px] border border-transparent hover:border-black/10">
+                    {{ localDateRangeType() }}
+                </button>
+                <!-- Date Range Dropdown -->
+                @if (showDateRange()) {
+                <div
+                    class="absolute bottom-full left-0 mb-2 flex flex-col w-[100px] bg-surface rounded-xl shadow-elevation-3 p-1 z-10 animate-fade-in-up border border-theme">
+                    <button class="px-3 py-1.5 text-xs text-left hover:bg-black/5 rounded-lg"
+                        (click)="changeDateRange('day')">Day</button>
+                    <button class="px-3 py-1.5 text-xs text-left hover:bg-black/5 rounded-lg"
+                        (click)="changeDateRange('week')">Week</button>
+                    <button class="px-3 py-1.5 text-xs text-left hover:bg-black/5 rounded-lg"
+                        (click)="changeDateRange('month')">Month</button>
+                    <button class="px-3 py-1.5 text-xs text-left hover:bg-black/5 rounded-lg"
+                        (click)="changeDateRange('year')">Year</button>
+                </div>
+                }
+            </div>
+
             <!-- Color Picker -->
             <div class="relative">
-                <button (click)="showColors.set(!showColors())"
+                <button (click)="showColors.set(!showColors()); showDateRange.set(false)"
                     class="w-8 h-8 rounded-full hover:bg-black/5 flex items-center justify-center transition-colors">
                     <span class="material-symbols-outlined text-[20px]">palette</span>
                 </button>

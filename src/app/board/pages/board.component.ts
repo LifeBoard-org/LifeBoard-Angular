@@ -7,6 +7,7 @@ import { Note } from "../components/note/note";
 import { ActivatedRoute, RouterLink } from "@angular/router";
 import { ToggleTheme } from "../../core/theme/toggle-theme/toggle-theme";
 import { BoardHeader } from "../components/board-header/board-header";
+import { BoardStateService } from "../../core/services/board-state.service";
 
 @Component({
     selector: 'app-board',
@@ -22,6 +23,14 @@ export class BoardComponent implements OnInit {
 
     private themeServices = inject(ThemeService);
     private route = inject(ActivatedRoute);
+    private boardStateService = inject(BoardStateService);
+
+    localDateString = computed(() => {
+        const d = this.boardDate();
+        return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
+    });
+
+    boardItems = computed(() => this.boardStateService.getItemsForDate(this.localDateString()));
 
     constructor() {
         this.darkMode = this.themeServices.isDarkMode()
@@ -151,7 +160,7 @@ export class BoardComponent implements OnInit {
             const worldDy = dy / this.zoom();
 
             // Update the specific item
-            this.boardItems.update(items => items.map(i => {
+            this.boardStateService.items.update(items => items.map(i => {
                 if (i.id === this.resizeActiveItem!.id) {
                     return {
                         ...i,
@@ -243,7 +252,7 @@ export class BoardComponent implements OnInit {
                 const worldDx = dx / this.zoom();
                 const worldDy = dy / this.zoom();
 
-                this.boardItems.update(items => items.map(i => {
+                this.boardStateService.items.update(items => items.map(i => {
                     if (i.id === this.resizeActiveItem!.id) {
                         return {
                             ...i,
@@ -294,7 +303,7 @@ export class BoardComponent implements OnInit {
         const worldDeltaY = y / this.zoom();
 
         // 3. Update the item's permanent position
-        this.boardItems.update(items => items.map(i => {
+        this.boardStateService.items.update(items => items.map(i => {
             if (i.id === item.id) {
                 return { ...i, x: i.x + worldDeltaX, y: i.y + worldDeltaY };
             }
@@ -337,37 +346,24 @@ export class BoardComponent implements OnInit {
 
 
 
-    //Adding items
-    boardItems = signal<BoardItem[]>([
-        // {
-        //     id: 1,
-        //     type: 'note',
-        //     x: 700,
-        //     y: 400,
-        //     width: 200,
-        //     height: 150,
-        //     content: { title: 'New Idea', content: 'New Idea', isEditing: false },
-        //     color: '#fff9c4'
-        // }
-    ]);
     activeItem = signal<BoardItem | null>(null);
     addItem(type: 'note' | 'task' | 'image') {
-        console.log(this.boardItems);
+        console.log(this.boardItems());
 
         const center = this.getViewportCenterInWorldSpace();
         const newItem: BoardItem = {
             id: Date.now(),
             type,
-            x: center.x,
-            y: center.y,
+            x: center.x - 100,
+            y: center.y - 100,
             width: 300,  // Slightly wider default
             height: 200, // Slightly taller default
             content: { title: '', content: '', isEditing: true, color: 'var(--color-surface)' },
-            color: 'var(--color-surface)'
+            color: 'var(--color-surface)',
+            date: this.localDateString(),
+            dateRangeType: 'day'
         };
         this.activeItem.set(newItem);
-        // this.boardItems.update(items => [...items, newItem]);
-
     }
     editItem(item: BoardItem) {
         // Create a deep copy to avoid direct mutation
@@ -387,17 +383,22 @@ export class BoardComponent implements OnInit {
                 },
                 color: this.activeItem()!.content.color || 'var(--color-note-default)'
             };
+            console.log(updatedItem);
 
-            this.boardItems.update(items => {
-                const existingIndex = items.findIndex(i => i.id === updatedItem.id);
-                if (existingIndex > -1) {
-                    const newItems = [...items];
-                    newItems[existingIndex] = updatedItem;
-                    return newItems;
-                }
-                return [...items, updatedItem];
-            });
+
+            this.boardStateService.updateItem(updatedItem);
         }
         this.activeItem.set(null);
+    }
+
+    updateItemDateRange(item: BoardItem, newRangeType: 'day' | 'week' | 'month' | 'year') {
+        const updatedItem = { ...item, dateRangeType: newRangeType };
+        this.boardStateService.updateItem(updatedItem);
+    }
+
+    updateActiveItemDateRange(newRangeType: 'day' | 'week' | 'month' | 'year') {
+        if (this.activeItem()) {
+            this.activeItem.update(item => ({ ...item!, dateRangeType: newRangeType }));
+        }
     }
 }

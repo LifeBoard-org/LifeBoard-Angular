@@ -1,7 +1,5 @@
 export type BoardItemType = 'note' | 'task' | 'image';
 
-
-
 export interface BoardItem {
   id: number;
   type: BoardItemType;
@@ -11,6 +9,8 @@ export interface BoardItem {
   color: string;
   width: number;
   height: number;
+  date?: string; // Format: YYYY-MM-DD
+  dateRangeType?: 'day' | 'week' | 'month' | 'year';
 }
 
 export interface NoteContent {

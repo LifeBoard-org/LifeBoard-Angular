@@ -12,11 +12,15 @@ import { NoteContent } from '../../pages/board.types';
 })
 export class Note {
   content = input.required<NoteContent>();
+  dateRangeType = input<'day' | 'week' | 'month' | 'year'>('day');
   closeModal = output<void>();
+  dateRangeTypeChange = output<'day' | 'week' | 'month' | 'year'>();
 
   // Use a local signal for managing state internally, especially for edits
   localContent = signal<NoteContent>({ title: '', content: '', isEditing: false, tasks: undefined });
+  localDateRangeType = signal<'day' | 'week' | 'month' | 'year'>('day');
   showColors = signal(false);
+  showDateRange = signal(false);
 
   // Predefined colors based on Material Design (Keep style) CSS variables
   colors = [
@@ -36,6 +40,7 @@ export class Note {
           tasks: inputContent.tasks ? [...inputContent.tasks] : undefined
         });
       }
+      this.localDateRangeType.set(this.dateRangeType() || 'day');
     }, { allowSignalWrites: true });
   }
 
@@ -57,6 +62,12 @@ export class Note {
 
   changeColor(color: string) {
     this.localContent.update(c => ({ ...c, color }));
+  }
+
+  changeDateRange(type: 'day' | 'week' | 'month' | 'year') {
+    this.localDateRangeType.set(type);
+    this.dateRangeTypeChange.emit(type);
+    this.showDateRange.set(false);
   }
 
   // --- Task Operations ---

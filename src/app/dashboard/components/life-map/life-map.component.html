@@ -54,17 +54,18 @@
           @for(week of groupedDays()[month]; track week) {
           <div class="flex flex-col gap-[2px] flex-1">
             @for(day of week; track day) {
-            <div [routerLink]="day != -1 ? ['/board'] : null"
-              [queryParams]="day != -1 ? { date: day.toISOString() } : null"
-              [title]="day != -1 ? day.toDateString() : ''"
-              [class]="day != -1 ? 'cursor-pointer bg-black/10 rounded-[3px] dark:bg-white/10 flex justify-center items-center' : ''"
+            <div [routerLink]="day !== '-1' ? ['/board'] : null"
+              [queryParams]="day !== '-1' ? { date: asDate(day).toISOString() } : null"
+              [title]="day !== '-1' ? asDate(day).toDateString() : ''"
+              [class]="day !== '-1' ? getHeatmapClass(day, itemCounts()) : ''"
               class="w-full aspect-square relative min-w-[12px] max-w-[24px] mx-auto">
-              @if(day != -1) {
-              <p [class]="day > today ? 'text-[#808080]' : ''"
+              @if(day !== '-1') {
+              <p [class]="asDate(day) > today ? 'text-[#808080]' : ''"
                 class="text-[6px] sm:text-[8px] text-center leading-none">
-                {{day.getDate()}}
+                {{asDate(day).getDate()}}
               </p>
-              @if(day.getDate() == today.getDate() && day.getMonth() == today.getMonth() && day.getFullYear() ==
+              @if(asDate(day).getDate() == today.getDate() && asDate(day).getMonth() == today.getMonth() &&
+              asDate(day).getFullYear() ==
               today.getFullYear()) {
               <span
                 class="absolute w-full h-full top-0 left-0 bg-primary/10 animate-ping border rounded-full border-primary"></span>

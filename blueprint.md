@@ -58,22 +58,24 @@ The application uses lazy-loading for its main features:
 - [ ] Expanding Board feature interactions (connections, grouping, zooming to objects).
 - [ ] Adding more Dashboard widgets.
 
-## Current Plan: Mobile & Touch Screen Responsiveness (Board Component)
+## Current Plan: Board State and Date Integration
 
-### Phase 1: Touch Events for Panning & Zooming
-- Map standard `HostListener` mouse events to their mobile equivalents (`touchstart`, `touchmove`, `touchend`).
-- Implement pinch-to-zoom functionality by calculating the distance between two touches on `touchmove` events.
-- Maintain smooth UX by mapping a single touch to "pan" functionality without needing a dedicated pan-mode toggle, or using a two-finger swipe while a single finger interacts with objects.
+### Phase 1: Global State Service & Model Updates
+- **Type Definitions**: Extend `BoardItem` model to include `date?: string` and `dateRangeType?: 'day' | 'week' | 'month' | 'year'`.
+- **BoardStateService**: Create a new singleton service (`providedIn: 'root'`) to manage the global state of board items using Angular Signals.
+- **Service Logic**: Implement methods to add, update, delete items, and create derived `computed` signals to retrieve items for specific dates or ranges. 
 
-### Phase 2: Mobile UI Element Adaptations
-- **Note Items Tools Toolbar**: Remove the Tailwind `hidden md:flex` classes from the drag and edit icons layout (`board.component.html`) so touch gestures can actually interact with the handles. Show these controls when the user taps once (selecting the item), or just display them proactively on mobile.
-- **Floating Action Button (FAB)**: Update the "Add Item" button layout for mobile devices using responsive styling to condense it into a circular FAB, saving screen real estate.
-- **Board Metrics Window**: Hide or minimize the debug zoom/coordinate overlay on smaller screens (`max-width: 768px`) to remove visual clutter.
+### Phase 2: Board Component Refactoring
+- **State Integration**: Replace the local `boardItems` state in `BoardComponent` with the global state from `BoardStateService`.
+- **Date Filtering**: Update the board to only display items that match the currently selected `boardDate` (or if they fall into the selected date range).
+- **Date Assignment**: Ensure that when new items are added, they are assigned to the currently selected `boardDate` and default to a 'day' range type.
 
-### Phase 3: Resize and Drag Handling for Mobile
-- Add `touchstart`, `touchmove`, `touchend` event handlers to the `.resize-handle` div to ensure users can resize notes using touch natively.
-- Make sure that Angular CDK `cdkDrag` works cleanly with mobile browser behaviours by ensuring `.viewport` retains `touch-action: none`.
+### Phase 3: Dashboard Integration
+- **Week View**: Integrate `BoardStateService` into the `WeekView` component. Map board items to corresponding days and display colored dots indicating the types of items available for each day.
+- **Life Map**: Integrate `BoardStateService` into the `LifeMapComponent`. Calculate the count of board items per day to determine the intensity of the heatmap blocks dynamically.
 
-### Phase 4: Verification and Polish
-- Ensure the application doesn't accidentally trigger browser "pull-to-refresh" or local zooming text inputs.
-- Test drag capabilities across variable device form-factors by mimicking device dimensions in dev tools.
+### Phase 4: Verification
+- Verify that adding an item on the board persists across navigation (Dashboard -> Board).
+- Verify that items explicitly display only on their assigned dates or within their specific ranges.
+- Validate the week view dots correctly depict the items assigned to each day.
+- Validate the life map heatmap intensity reflects the correct item count per day.
