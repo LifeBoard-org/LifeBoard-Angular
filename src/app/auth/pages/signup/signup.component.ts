@@ -4,18 +4,18 @@ import { RouterLink } from '@angular/router';
 
 @Component({
   standalone: true,
-  imports: [ReactiveFormsModule,RouterLink],
+  imports: [ReactiveFormsModule],
   templateUrl:'./signup.component.html',
 })
 export class SignupComponent {
     form:FormGroup
-    
+
     constructor(private fb: FormBuilder) {
         this.form = this.fb.group({
             name: ['', Validators.required],
             email: ['', [Validators.required, Validators.email]],
             password: ['', Validators.required]
-        });    
+        });
   }
 
   signup() {

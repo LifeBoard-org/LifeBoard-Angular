@@ -4,7 +4,8 @@ import { RouterLink } from '@angular/router';
 
 @Component({
   standalone: true,
-  imports: [ReactiveFormsModule,RouterLink],
+  selector:'app-login',
+  imports: [ReactiveFormsModule, RouterLink],
   templateUrl:'./login.component.html',
   styleUrl:'./login.component.css'
 })
