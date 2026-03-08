@@ -41,12 +41,11 @@
   position: absolute;
   /* Remove transform:translate(-50%) so drag coordinates are 1:1 with top/left */
   /* If you want to center on creation, handle that in the TS logic */
-  border-radius: 8px;
   border: 1px solid rgba(0, 0, 0, 0.1);
   /* Important for performance */
   will-change: transform, width, height;
   /* background: white; */
-  overflow: hidden;
+  /* overflow: hidden; */
 }
 
 .board-item:hover {

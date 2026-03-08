@@ -87,7 +87,7 @@
                 <!-- Date Range Dropdown -->
                 @if (showDateRange()) {
                 <div
-                    class="absolute bottom-full left-0 mb-2 flex flex-col w-[100px] bg-surface rounded-xl shadow-elevation-3 p-1 z-10 animate-fade-in-up border border-theme">
+                    class="absolute bottom-full items-center left-0 mb-2 flex flex-col w-[100px] bg-surface rounded-xl shadow-elevation-3 p-1 z-10 animate-fade-in-up border border-theme">
                     <button class="px-3 py-1.5 text-xs text-left hover:bg-black/5 rounded-lg"
                         (click)="changeDateRange('day')">Day</button>
                     <button class="px-3 py-1.5 text-xs text-left hover:bg-black/5 rounded-lg"
@@ -109,10 +109,11 @@
                 <!-- Color Palette Dropdown -->
                 @if (showColors()) {
                 <div
-                    class="absolute bottom-full left-0 mb-2 flex flex-wrap w-[150px] bg-surface rounded-xl shadow-elevation-3 p-2 gap-1 z-10 animate-fade-in-up border border-theme">
+                    class="absolute items-center justify-center bottom-full left-0 mb-2 flex flex-wrap w-[150px] bg-surface rounded-xl shadow-elevation-3 p-2 gap-1 z-10 animate-fade-in-up border border-theme">
                     @for (color of colors; track $index) {
-                    <button class="w-6 h-6 rounded-full border border-black/10 hover:scale-110 transition-transform"
-                        [style.backgroundColor]="color" [class.border-black]="localContent().color === color"
+                    <button
+                        class="w-6 h-6 rounded-full border dark:border-white/10 border-black/10 hover:scale-110 transition-transform"
+                        [style.backgroundColor]="color" [class.border-white]="localContent().color === color"
                         (click)="changeColor(color); showColors.set(false)"></button>
                     }
                 </div>

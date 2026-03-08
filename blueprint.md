@@ -79,3 +79,44 @@ The application uses lazy-loading for its main features:
 - Verify that items explicitly display only on their assigned dates or within their specific ranges.
 - Validate the week view dots correctly depict the items assigned to each day.
 - Validate the life map heatmap intensity reflects the correct item count per day.
+
+## API Server Blueprint: NestJS + MongoDB
+
+### 1. Architecture & Modules
+The NestJS backend should reflect the feature modularity of the Angular frontend:
+- **`AuthModule`**: JWT-based authentication matching the `/auth` UI (Login, Signup, Forgot Password).
+- **`UsersModule`**: Core user data and profile management.
+- **`BoardItemsModule`**: Handles all CRUD operations and date-based queries for LifeBoard items.
+
+### 2. MongoDB Data Models (Mongoose)
+
+**User Schema (`users`)**
+- `_id`: ObjectId
+- `email`: String (Unique, Indexed)
+- `passwordHash`: String
+- `name`: String
+- timestamps (`createdAt`, `updatedAt`)
+
+**BoardItem Schema (`board_items`)**
+Designed to accommodate notes, tasks, and images flexibly while supporting heavy date queries for the dashboard.
+- `_id`: ObjectId
+- `userId`: ObjectId (Ref -> User, Indexed)
+- `type`: String (Enum: 'note', 'task', 'image')
+- `x`, `y`, `width`, `height`: Number (For the infinite canvas coordinates)
+- `color`: String
+- `date`: String (Format: YYYY-MM-DD, Indexed for fast queries)
+- `dateRangeType`: String (Enum: 'day', 'week', 'month', 'year')
+- `content`: Embedded Object / Subdocument
+  - `title`: String
+  - `content`: String
+  - `image`: String (URL or storage path)
+  - `color`: String
+  - `tasks`: Array of Objects `[{ _id: ObjectId, text: String, completed: Boolean }]`
+- timestamps (`createdAt`, `updatedAt`)
+
+### 3. API Endpoints for Frontend Integration
+- **GET** `/api/board-items?date=YYYY-MM-DD` (Fetches items for a specific date or range)
+- **POST** `/api/board-items` (Create new item)
+- **PUT** `/api/board-items/:id` (Update an item's position, content, or date)
+- **DELETE** `/api/board-items/:id` (Remove item)
+- **GET** `/api/board-items/stats` (Optional: Custom endpoint to aggregate `getItemCountForDate` and `getUniqueItemColorsForDate` for the Life Map and Week View in bulk, heavily optimizing dashboard load times).
